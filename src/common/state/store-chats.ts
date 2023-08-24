@@ -2,12 +2,16 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ChatModelId, defaultChatModelId, defaultSystemPurposeId, SystemPurposeId } from '../../data';
-import { updateTokenCount } from '../llm-util/token-counter';
+import { DLLMId } from '~/modules/llms/llm.types';
+import { useModelsStore } from '~/modules/llms/store-llms';
+
+import { countModelTokens } from '../util/token-counter';
+import { defaultSystemPurposeId, SystemPurposeId } from '../../data';
 
 
 // configuration
 export const MAX_CONVERSATIONS = 20;
+
 
 /**
  * Conversation, a list of messages between humans and bots
@@ -19,10 +23,9 @@ export interface DConversation {
   id: string;
   messages: DMessage[];
   systemPurposeId: SystemPurposeId;
-  chatModelId: ChatModelId;
   userTitle?: string;
   autoTitle?: string;
-  tokenCount: number;                 // f(messages, chatModelId)
+  tokenCount: number;                 // f(messages, llmId)
   created: number;                    // created timestamp
   updated: number | null;             // updated timestamp
   // Not persisted, used while in-memory, or temporarily by the UI
@@ -30,22 +33,20 @@ export interface DConversation {
   ephemerals: DEphemeral[];
 }
 
-export const createDefaultConversation = (systemPurposeId?: SystemPurposeId, chatModelId?: ChatModelId): DConversation => ({
-  id: uuidv4(),
-  messages: [],
-  systemPurposeId: systemPurposeId || defaultSystemPurposeId,
-  chatModelId: chatModelId || defaultChatModelId,
-  tokenCount: 0,
-  created: Date.now(),
-  updated: Date.now(),
-  abortController: null,
-  ephemerals: [],
-});
+export function createDConversation(systemPurposeId?: SystemPurposeId): DConversation {
+  return {
+    id: uuidv4(),
+    messages: [],
+    systemPurposeId: systemPurposeId || defaultSystemPurposeId,
+    tokenCount: 0,
+    created: Date.now(),
+    updated: Date.now(),
+    abortController: null,
+    ephemerals: [],
+  };
+}
 
-export const conversationTitle = (conversation: DConversation): string =>
-  conversation.userTitle || conversation.autoTitle || 'new conversation'; // 👋💬🗨️
-
-const defaultConversations: DConversation[] = [createDefaultConversation()];
+const defaultConversations: DConversation[] = [createDConversation()];
 
 /**
  * Message, sent or received, by humans or bots
@@ -73,8 +74,8 @@ export interface DMessage {
   updated: number | null;           // updated timestamp
 }
 
-export const createDMessage = (role: DMessage['role'], text: string): DMessage =>
-  ({
+export function createDMessage(role: DMessage['role'], text: string): DMessage {
+  return {
     id: uuidv4(),
     text,
     sender: role === 'user' ? 'You' : 'Bot',
@@ -84,7 +85,8 @@ export const createDMessage = (role: DMessage['role'], text: string): DMessage =
     tokenCount: 0,
     created: Date.now(),
     updated: null,
-  });
+  };
+}
 
 /**
  * InterimStep, a place side-channel information is displayed
@@ -96,12 +98,14 @@ export interface DEphemeral {
   state: object;
 }
 
-export const createEphemeral = (title: string, initialText: string): DEphemeral => ({
-  id: uuidv4(),
-  title: title,
-  text: initialText,
-  state: {},
-});
+export function createDEphemeral(title: string, initialText: string): DEphemeral {
+  return {
+    id: uuidv4(),
+    title: title,
+    text: initialText,
+    state: {},
+  };
+}
 
 
 /// Conversations Store
@@ -113,6 +117,7 @@ export interface ChatStore {
 
   // store setters
   createConversation: () => void;
+  duplicateConversation: (conversationId: string) => void;
   importConversation: (conversation: DConversation) => void;
   deleteConversation: (conversationId: string) => void;
   deleteAllConversations: () => void;
@@ -125,7 +130,6 @@ export interface ChatStore {
   appendMessage: (conversationId: string, message: DMessage) => void;
   deleteMessage: (conversationId: string, messageId: string) => void;
   editMessage: (conversationId: string, messageId: string, updatedMessage: Partial<DMessage>, touch: boolean) => void;
-  setChatModelId: (conversationId: string, chatModelId: ChatModelId) => void;
   setSystemPurposeId: (conversationId: string, systemPurposeId: SystemPurposeId) => void;
   setAutoTitle: (conversationId: string, autoTitle: string) => void;
   setUserTitle: (conversationId: string, userTitle: string) => void;
@@ -152,7 +156,7 @@ export const useChatStore = create<ChatStore>()(devtools(
         set(state => {
           // inherit some values from the active conversation (matches users' expectations)
           const activeConversation = state.conversations.find((conversation: DConversation): boolean => conversation.id === state.activeConversationId);
-          const conversation = createDefaultConversation(activeConversation?.systemPurposeId, activeConversation?.chatModelId);
+          const conversation = createDConversation(activeConversation?.systemPurposeId);
           return {
             conversations: [
               conversation,
@@ -162,9 +166,39 @@ export const useChatStore = create<ChatStore>()(devtools(
           };
         }),
 
+      duplicateConversation: (conversationId: string) =>
+        set(state => {
+          const conversation = state.conversations.find((conversation: DConversation): boolean => conversation.id === conversationId);
+          if (!conversation)
+            return {};
+
+          // create a deep copy of the conversation
+          const deepCopy: DConversation = JSON.parse(JSON.stringify(conversation));
+          const duplicate: DConversation = {
+            ...deepCopy,
+            id: uuidv4(),
+            messages: deepCopy.messages.map((message: DMessage): DMessage => ({
+              ...message,
+              id: uuidv4(),
+            })),
+            updated: Date.now(),
+            abortController: null,
+            ephemerals: [],
+          };
+
+          return {
+            conversations: [
+              duplicate,
+              ...state.conversations, // DISABLED: can inadvertendly lose data - check upstream instead - .slice(0, MAX_CONVERSATIONS - 1),
+            ],
+            activeConversationId: duplicate.id,
+          };
+        }),
+
       importConversation: (conversation: DConversation) => {
         get().deleteConversation(conversation.id);
         set(state => {
+          conversation.tokenCount = updateTokenCounts(conversation.messages, true, 'importConversation');
           return {
             // NOTE: the .filter below is superfluous (we delete the conversation above), but it's a reminder that we don't want to corrupt the state
             conversations: [
@@ -204,7 +238,7 @@ export const useChatStore = create<ChatStore>()(devtools(
         set(state => {
           // inherit some values from the active conversation (matches users' expectations)
           const activeConversation = state.conversations.find((conversation: DConversation): boolean => conversation.id === state.activeConversationId);
-          const conversation = createDefaultConversation(activeConversation?.systemPurposeId, activeConversation?.chatModelId);
+          const conversation = createDConversation(activeConversation?.systemPurposeId);
 
           // abort any pending requests on all conversations
           state.conversations.forEach((conversation: DConversation) => conversation.abortController?.abort());
@@ -242,7 +276,7 @@ export const useChatStore = create<ChatStore>()(devtools(
           conversation.abortController?.abort();
           return {
             messages: newMessages,
-            tokenCount: newMessages.reduce((sum, message) => sum + 4 + updateTokenCount(message, conversation.chatModelId, false, 'setMessages'), 3),
+            tokenCount: updateTokenCounts(newMessages, false, 'setMessages'),
             updated: Date.now(),
             abortController: null,
             ephemerals: [],
@@ -253,7 +287,7 @@ export const useChatStore = create<ChatStore>()(devtools(
         get()._editConversation(conversationId, conversation => {
 
           if (!message.typing)
-            updateTokenCount(message, conversation.chatModelId, true, 'appendMessage');
+            updateTokenCounts([message], true, 'appendMessage');
 
           const messages = [...conversation.messages, message];
 
@@ -279,13 +313,16 @@ export const useChatStore = create<ChatStore>()(devtools(
       editMessage: (conversationId: string, messageId: string, updatedMessage: Partial<DMessage>, setUpdated: boolean) =>
         get()._editConversation(conversationId, conversation => {
 
+          const chatLLMId = useModelsStore.getState().chatLLMId;
           const messages = conversation.messages.map((message: DMessage): DMessage =>
             message.id === messageId
               ? {
                 ...message,
                 ...updatedMessage,
                 ...(setUpdated && { updated: Date.now() }),
-                ...(((updatedMessage.typing === false || !message.typing) && { tokenCount: updateTokenCount(message, conversation.chatModelId, true, 'editMessage(typing=false)') })),
+                ...(((updatedMessage.typing === false || !message.typing) && chatLLMId && {
+                  tokenCount: countModelTokens(updatedMessage.text || message.text, chatLLMId, 'editMessage(typing=false)'),
+                })),
               }
               : message);
 
@@ -293,14 +330,6 @@ export const useChatStore = create<ChatStore>()(devtools(
             messages,
             tokenCount: messages.reduce((sum, message) => sum + 4 + message.tokenCount || 0, 3),
             ...(setUpdated && { updated: Date.now() }),
-          };
-        }),
-
-      setChatModelId: (conversationId: string, chatModelId: ChatModelId) =>
-        get()._editConversation(conversationId, conversation => {
-          return {
-            chatModelId,
-            tokenCount: conversation.messages.reduce((sum, message) => sum + 4 + updateTokenCount(message, chatModelId, true, 'setChatModelId'), 3),
           };
         }),
 
@@ -417,49 +446,18 @@ export const useChatStore = create<ChatStore>()(devtools(
 
 
 /**
- * Download a conversation as a JSON file, for backup and future restore
- * Not the best place to have this function, but we want it close to the (re)store function
+ * Convenience function to count the tokens in a DMessage object
  */
-export const downloadConversationJson = (_conversation: DConversation) => {
-  if (typeof window === 'undefined') return;
-
-  // payload to be downloaded
-  const { abortController, ephemerals, ...conversation } = _conversation;
-  const json = JSON.stringify(conversation, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const filename = `conversation-${conversation.id}.json`;
-
-  // link to begin the download
-  const tempUrl = URL.createObjectURL(blob);
-  const tempLink = document.createElement('a');
-  tempLink.href = tempUrl;
-  tempLink.download = filename;
-  tempLink.style.display = 'none';
-  document.body.appendChild(tempLink);
-  tempLink.click();
-  document.body.removeChild(tempLink);
-  URL.revokeObjectURL(tempUrl);
-};
+function updateDMessageTokenCount(message: DMessage, llmId: DLLMId | null, forceUpdate: boolean, debugFrom: string): number {
+  if (forceUpdate || !message.tokenCount)
+    message.tokenCount = llmId ? countModelTokens(message.text, llmId, debugFrom) : 0;
+  return message.tokenCount;
+}
 
 /**
- * Restore a conversation from a JSON string
+ * Convenience function to update a set of messages, using the current chatLLM
  */
-export const restoreConversationFromJson = (json: string): DConversation | null => {
-  const restored: Partial<DConversation> = JSON.parse(json);
-  if (restored && restored.id && restored.messages) {
-    return {
-      id: restored.id,
-      messages: restored.messages,
-      systemPurposeId: restored.systemPurposeId || defaultSystemPurposeId,
-      chatModelId: restored.chatModelId || defaultChatModelId,
-      // ...(restored.userTitle && { userTitle: restored.userTitle }),
-      // ...(restored.autoTitle && { autoTitle: restored.autoTitle }),
-      tokenCount: restored.tokenCount || 0,
-      created: restored.created || Date.now(),
-      updated: restored.updated || Date.now(),
-      abortController: null,
-      ephemerals: [],
-    } satisfies DConversation;
-  }
-  return null;
-};
+function updateTokenCounts(messages: DMessage[], forceUpdate: boolean, debugFrom: string): number {
+  const { chatLLMId } = useModelsStore.getState();
+  return 3 + messages.reduce((sum, message) => 4 + updateDMessageTokenCount(message, chatLLMId, forceUpdate, debugFrom) + sum, 0);
+}

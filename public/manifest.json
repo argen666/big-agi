@@ -1,8 +1,8 @@
 {
   "name": "big-AGI",
-  "short_name": "AGI",
-  "theme_color": "#434356",
-  "background_color": "#B9B9C6",
+  "short_name": "big-AGI",
+  "theme_color": "#32383E",
+  "background_color": "#9FA6AD",
   "description": "Personal AGI App",
   "display": "standalone",
   "start_url": "/",
@@ -23,5 +23,15 @@
       "sizes": "1024x1024",
       "type": "image/png"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }

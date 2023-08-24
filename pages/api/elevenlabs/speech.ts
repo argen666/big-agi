@@ -1,27 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { ElevenLabs } from '@/modules/elevenlabs/elevenlabs.types';
-import { postToElevenLabs } from '@/modules/elevenlabs/elevenlabs.server';
+import { elevenlabsAccess, elevenlabsVoiceId, ElevenlabsWire, speechInputSchema } from '~/modules/elevenlabs/elevenlabs.router';
+import { createEmptyReadableStream, throwResponseNotOk } from '../llms/stream';
 
+
+/* NOTE: Why does this file even exist?
+
+This file is a workaround for a limitation in tRPC; it does not support ArrayBuffer responses,
+and that would force us to use base64 encoding for the audio data, which would be a waste of
+bandwidth. So instead, we use this file to make the request to ElevenLabs, and then return the
+response as an ArrayBuffer. Unfortunately this means duplicating the code in the server-side
+and client-side vs. the TRPC implementation. So at lease we recycle the input structures.
+
+*/
 
 export default async function handler(req: NextRequest) {
   try {
-    const { apiKey = '', text, voiceId: userVoiceId, nonEnglish } = (await req.json()) as ElevenLabs.API.TextToSpeech.RequestBody;
-    const voiceId = userVoiceId || process.env.ELEVENLABS_VOICE_ID || '21m00Tcm4TlvDq8ikWAM';
-    const requestPayload: ElevenLabs.Wire.TextToSpeech.Request = {
+
+    // construct the upstream request
+    const {
+      elevenKey, text, voiceId, nonEnglish,
+      streaming, streamOptimization,
+    } = speechInputSchema.parse(await req.json());
+    const path = `/v1/text-to-speech/${elevenlabsVoiceId(voiceId)}` + (streaming ? `/stream?optimize_streaming_latency=${streamOptimization || 1}` : '');
+    const { headers, url } = elevenlabsAccess(elevenKey, path);
+    const body: ElevenlabsWire.TTSRequest = {
       text: text,
-      ...(nonEnglish ? { model_id: 'eleven_multilingual_v1' } : {}),
+      ...(nonEnglish && { model_id: 'eleven_multilingual_v1' }),
     };
-    const response = await postToElevenLabs<ElevenLabs.Wire.TextToSpeech.Request>(apiKey, `/v1/text-to-speech/${voiceId}`, requestPayload);
-    const audioBuffer: ElevenLabs.API.TextToSpeech.Response = await response.arrayBuffer();
-    return new NextResponse(audioBuffer, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } });
-  } catch (error) {
-    console.error('api/elevenlabs/speech error:', error);
-    return new NextResponse(JSON.stringify(`speechToText error: ${error?.toString() || 'Network issue'}`), { status: 500 });
+
+    // elevenlabs POST
+    const upstreamResponse: Response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+    await throwResponseNotOk(upstreamResponse);
+
+    // NOTE: this is disabled, as we pass-through what we get upstream for speed, as it is not worthy
+    //       to wait for the entire audio to be downloaded before we send it to the client
+    // if (!streaming) {
+    //   const audioArrayBuffer = await upstreamResponse.arrayBuffer();
+    //   return new NextResponse(audioArrayBuffer, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } });
+    // }
+
+    // stream the data to the client
+    const audioReadableStream = upstreamResponse.body || createEmptyReadableStream();
+    return new NextResponse(audioReadableStream, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } });
+
+  } catch (error: any) {
+    const fetchOrVendorError = (error?.message || typeof error === 'string' ? error : JSON.stringify(error)) + (error?.cause ? ' · ' + error.cause : '');
+    console.log(`api/elevenlabs/speech: fetch issue: ${fetchOrVendorError}`);
+    return new NextResponse('[ElevenLabs Issue] ' + fetchOrVendorError, { status: 500 });
   }
 }
 
 // noinspection JSUnusedGlobalSymbols
-export const config = {
-  runtime: 'edge',
-};
+export const runtime = 'edge';
