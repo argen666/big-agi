@@ -6,17 +6,15 @@ import {speakText} from '~/modules/elevenlabs/elevenlabs.client';
 import {useEmbeddingsStore} from '~/modules/llms/openai/embeddings/store-embeddings';
 
 import {autoTitle} from '~/modules/aifn/autotitle/autoTitle';
-import { createAssistantTypingMessage } from './editors';
-
-import {callPublish} from '~/modules/llms/openai/embeddings/embeddings.client';
+import {createAssistantTypingMessage} from './editors';
 import {useElevenlabsStore} from "~/modules/elevenlabs/store-elevenlabs";
-import {streamChat} from "~/modules/llms/llm.client";
+import {findLLMOrThrow, streamChat} from "~/modules/llms/llm.client";
 //import { ChatOpenAI } from "langchain/chat_models/openai";
 //import { loadQAChain } from "langchain/chains";
 //import {callElastic} from "~/modules/elastic/elastic.client";
-import { apiQuery, apiAsync } from '~/modules/trpc/trpc.client';
+import {apiAsync} from '~/modules/trpc/trpc.client';
 import {Simulate} from "react-dom/test-utils";
-import input = Simulate.input;
+import {ModelVendorOpenAI, SourceSetupOpenAI} from "~/modules/llms/openai/openai.vendor";
 
 
 /**
@@ -26,10 +24,13 @@ import input = Simulate.input;
 export async function runEmbeddingsUpdatingState(conversationId: string, history: DMessage[], question: string, assistantModel: DLLMId, systemPurpose: SystemPurposeId) {
     const {embeddingsChainType: chainType, modelTemperature: modelTemp} = useEmbeddingsStore.getState();
     let assistantMessageId = ""
-    if (chainType && chainType !== "" && chainType !== "none") {
-        history = updatePurposeInHistory(conversationId, history, null, systemPurpose);
-        assistantMessageId = createAssistantTypingMessage(conversationId, assistantModel, history[0].purposeId, '...');
-    }
+    //if (chainType && chainType !== "" && chainType !== "none") {
+    //}
+    history = updatePurposeInHistory(conversationId, history, null, systemPurpose);
+    assistantMessageId = createAssistantTypingMessage(conversationId, assistantModel, history[0].purposeId, '...');
+    const controller = new AbortController();
+    const {startTyping, editMessage} = useChatStore.getState();
+    startTyping(conversationId, controller);
     // update the system message from the active Purpose, if not manually edited
     const response = await getResultWithEmbeddings(question, assistantModel)
     if (response && response?.chainType !== "" && response?.chainType !== "none") {
@@ -93,11 +94,18 @@ async function getResultWithEmbeddings(question: string, model: string) {
         embeddingsChainType: chainType,
         modelTemperature: modelTemp
     } = useEmbeddingsStore.getState();
-    console.log("hhh: "+dbHost);
-    console.log(indexdb);
-    console.log(docsCount);
-    console.log(chainType);
-    const docsString = apiAsync.elastic.searchDocs.query({question:question,dbHost:dbHost,indexdb:indexdb,docsCount:docsCount,chainType:chainType});
+
+    const llm = findLLMOrThrow(model);
+    const openAISetup = ModelVendorOpenAI.normalizeSetup(llm._source.setup as Partial<SourceSetupOpenAI>);
+    // console.log(openAISetup)
+    const docsString = apiAsync.elastic.searchDocs.query({
+        question: question,
+        dbHost: dbHost,
+        indexdb: indexdb,
+        docsCount: docsCount,
+        chainType: chainType,
+        openAIKey: openAISetup.oaiKey
+    });
     console.log(docsString)
     return docsString
 }

@@ -12,6 +12,7 @@ const searchDocsInputSchema = z.object({
     indexdb: z.string(),
     docsCount: z.string(),
     chainType: z.string().nullable(),
+    openAIKey: z.string(),
 });
 
 const searchDocsInputSchema2 = z.object({
@@ -69,7 +70,7 @@ export function elevenlabsAccess(elevenKey: string | undefined, apiPath: string)
 
 async function callElastic(input) {
     try {
-        const {question,dbHost,indexdb,docsCount,chainType} = input;
+        const {question,dbHost,indexdb,docsCount,chainType,openAIKey} = input;
 
         if (!question)
             throw new Error('Invalid options');
@@ -77,7 +78,7 @@ async function callElastic(input) {
         let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n If you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\n";
 
         const embeddings = new OpenAIEmbeddings({
-            openAIApiKey: 'sk-Gf'//fixme!!!!
+            openAIApiKey: openAIKey//fixme!!!!
         });
 
         const config: ClientOptions = {
