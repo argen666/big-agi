@@ -161,6 +161,7 @@ async function similaritySearchVectorWithScore(
     const result = await clientArgs.client.search(q);
     console.log(result)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     return result.hits.hits.map((hit: any) => [
         new LDocument({
             pageContent: hit._source.text,
