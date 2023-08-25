@@ -81,9 +81,7 @@ export async function runEmbeddingsUpdatingState(conversationId: string, history
         // update text, if needed
         await autoTitle(conversationId);
     }
-
 }
-
 
 async function getResultWithEmbeddings(question: string, model: string) {
     //const docsString = await callPublish(question, model)
