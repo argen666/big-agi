@@ -77,7 +77,7 @@ async function callElastic(input) {
         let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n If you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\n";
 
         const embeddings = new OpenAIEmbeddings({
-            openAIApiKey: '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'//fixme!!!!
+            openAIApiKey: 'sk-Gf'//fixme!!!!
         });
 
         const config: ClientOptions = {
