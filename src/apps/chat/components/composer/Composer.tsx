@@ -14,6 +14,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import PsychologyIcon from '@mui/icons-material/Psychology';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import SendIcon from '@mui/icons-material/Send';
 import StopOutlinedIcon from '@mui/icons-material/StopOutlined';
 import TelegramIcon from '@mui/icons-material/Telegram';
@@ -440,14 +441,15 @@ export function Composer(props: {
   const isFollowUp = props.chatModeId === 'immediate-follow-up';
   const isReAct = props.chatModeId === 'react';
   const isWriteUser = props.chatModeId === 'write-user';
+  const isEmbeddings = props.chatModeId === 'embeddings';
 
   const chatButton = (
     <Button
-      fullWidth variant={isWriteUser ? 'soft' : 'solid'} color={isReAct ? 'success' : isFollowUp ? 'warning' : 'primary'} disabled={!props.conversationId || !chatLLM}
+      fullWidth variant={isWriteUser ? 'soft' : 'solid'} color={isReAct ? 'success' : isFollowUp ? 'warning' : isEmbeddings ? 'success' : 'primary'} disabled={!props.conversationId || !chatLLM}
       onClick={handleSendClicked} onDoubleClick={handleToggleChatMode}
-      endDecorator={isWriteUser ? <SendIcon sx={{ fontSize: 18 }} /> : isReAct ? <PsychologyIcon /> : <TelegramIcon />}
+      endDecorator={isWriteUser ? <SendIcon sx={{ fontSize: 18 }} /> : isReAct ? <PsychologyIcon /> : isEmbeddings? <LocalLibraryIcon /> : <TelegramIcon />}
     >
-      {isWriteUser ? 'Write' : isReAct ? 'ReAct' : isFollowUp ? 'Chat+' : 'Chat'}
+      {isWriteUser ? 'Write' : isReAct ? 'ReAct' : isFollowUp ? 'Chat+' : isEmbeddings ? 'Embeddings' :'Chat'}
     </Button>
   );
 
