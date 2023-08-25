@@ -7,6 +7,7 @@ import { llmOpenAIRouter } from '~/modules/llms/openai/openai.router';
 import { prodiaRouter } from '~/modules/prodia/prodia.router';
 import { sharingRouter } from '~/modules/sharing/sharing.router';
 import { ytPersonaRouter } from '../../apps/personas/ytpersona.router';
+import { elasticRouter } from '~/modules/elactic/elastic.router';
 
 /**
  * This is the primary router for your server.
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   prodia: prodiaRouter,
   sharing: sharingRouter,
   ytpersona: ytPersonaRouter,
+  elastic: elasticRouter,
 });
 
 // export type definition of API

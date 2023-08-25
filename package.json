@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.7",
+    "@elastic/elasticsearch": "^8.9.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -27,7 +28,9 @@
     "@trpc/server": "^10.37.1",
     "@vercel/analytics": "^1.0.2",
     "browser-fs-access": "^0.34.1",
+    "elastic": "^0.1.10",
     "eventsource-parser": "^1.0.0",
+    "langchain": "^0.0.133",
     "next": "^13.4.19",
     "pdfjs-dist": "3.9.179",
     "plantuml-encoder": "^1.4.0",

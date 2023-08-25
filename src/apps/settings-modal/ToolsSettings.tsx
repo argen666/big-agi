@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormHelperText, Stack } from '@mui/joy';
 
 import { GoogleSearchSettings } from '~/modules/google/GoogleSearchSettings';
+import { EmbeddingsSettings } from '~/modules/llms/openai/embeddings/EmbeddingsSettings';
 
 import { settingsGap } from '~/common/theme';
 
@@ -17,6 +18,7 @@ export function ToolsSettings() {
       </FormHelperText>
 
       <GoogleSearchSettings />
+      <EmbeddingsSettings />
 
     </Stack>
 
