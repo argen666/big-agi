@@ -26,7 +26,7 @@ export async function runEmbeddingsUpdatingState(conversationId: string, history
     let assistantMessageId = ""
     //if (chainType && chainType !== "" && chainType !== "none") {
     //}
-    history = updatePurposeInHistory(conversationId, history, null, systemPurpose);
+    //history = updatePurposeInHistory(conversationId, history, null, systemPurpose);
     assistantMessageId = createAssistantTypingMessage(conversationId, assistantModel, history[0].purposeId, '...');
     const controller = new AbortController();
     const {startTyping, editMessage} = useChatStore.getState();
@@ -113,7 +113,8 @@ export function updatePurposeInHistory(conversationId: string, history: DMessage
     const systemMessage: DMessage = systemMessageIndex >= 0 ? history.splice(systemMessageIndex, 1)[0] : createDMessage('system', '');
     if (!systemMessage.updated && purposeId && SystemPurposes[purposeId]?.systemMessage) {
         systemMessage.purposeId = purposeId;
-        systemMessage.text = systemMessageNew ? systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
+        //systemMessage.text = systemMessageNew ? systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
+        systemMessage.text = systemMessageNew ? systemMessage.text+systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
     }
     history.unshift(systemMessage);
     useChatStore.getState().setMessages(conversationId, history);
