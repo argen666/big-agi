@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 let nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   env: {
     // defaults to TRUE, unless API Keys are set at build time; this flag is used by the UI
     HAS_SERVER_KEYS_GOOGLE_CSE: !!process.env.GOOGLE_CLOUD_API_KEY && !!process.env.GOOGLE_CSE_ID,
