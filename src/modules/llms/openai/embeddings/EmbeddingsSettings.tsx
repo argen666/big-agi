@@ -20,7 +20,7 @@ import {
   embeddingsDefaultIndex,
   embeddingsDefaultDocCount,
   embeddingsDefaultChainType,
-  requireUserKeyEmbeddings,
+  requireUserKeyEmbeddings, embeddingsDefaultEmbeddingsModel,
 } from './embeddings.client';
 
 
@@ -29,11 +29,12 @@ export function EmbeddingsSettings() {
   const [showApiKeyValue, setShowApiKeyValue] = React.useState(false);
 
   // external state
-  const { apiKey, setApiKey, index, setIndex, docsCount, setDocsCount,chainType,setChainType} = useEmbeddingsStore(state => ({
+  const { apiKey, setApiKey, index, setIndex, docsCount, setDocsCount,chainType,setChainType, embeddingsModel,setEmbeddingsModel} = useEmbeddingsStore(state => ({
     apiKey: state.embeddingsApiKey, setApiKey: state.setEmbeddingsApiKey,
     index: state.embeddingsIndex, setIndex: state.setEmbeddingsIndex,
     docsCount: state.embeddingsDocs, setDocsCount: state.setEmbeddingsDocs,
     chainType: state.embeddingsChainType, setChainType: state.setEmbeddingsChainType,
+    embeddingsModel: state.embeddingsModel, setEmbeddingsModel: state.setEmbeddingsModel
   }), shallow);
 
   const requiresKey = requireUserKeyEmbeddings;
@@ -45,13 +46,37 @@ export function EmbeddingsSettings() {
 
   const handleChainTypeChange = (e: any, value: string | null) => value && setChainType(value);
 
+  const handleEmbeddingsModelChange = (e: any, value: string | null) => value && setEmbeddingsModel(value);
+
   const colWidth = 150;
 
   const chainTypes = ['stuff', 'map_reduce', 'refine', 'map_rerank'];
+  const embeddingModels = ['openai', 'bge-large-en'];
 
   return (
-    <Section title='📚 OpenAi Embeddings' collapsible collapsed disclaimer='Supported vector database: Elastic' sx={{ mt: 2 }}>
+    <Section title='📚 Embeddings' collapsible collapsed disclaimer='Supported vector database: Elastic' sx={{ mt: 2 }}>
       <Stack direction='column' sx={{ gap: settingsGap, mt: -0.8 }}>
+
+        <FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>
+          <FormLabel sx={{ minWidth: colWidth }}>
+            Embeddings Model
+          </FormLabel>
+          <Select
+              variant='outlined' placeholder=''
+              value={embeddingsModel || embeddingsDefaultEmbeddingsModel} onChange={handleEmbeddingsModelChange}
+              indicator={<KeyboardArrowDownIcon />}
+              slotProps={{
+                root: { sx: { width: '100%' } },
+                indicator: { sx: { opacity: 0.5 } },
+              }}
+          >
+            {embeddingModels?.map((mdl, idx) => (
+                <Option key={'embedding-model-' + idx} value={mdl}>
+                  {mdl}
+                </Option>
+            ))}
+          </Select>
+        </FormControl>
 
         <FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>
           <Box>

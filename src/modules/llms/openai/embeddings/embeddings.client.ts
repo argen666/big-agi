@@ -13,6 +13,8 @@ export const embeddingsDefaultDocCount: string = '1';
 
 export const embeddingsDefaultChainType: string = '';
 
+export const embeddingsDefaultEmbeddingsModel: string = 'openai';
+
 export async function callPublish(question: string, model: string): Promise<any | null> {
     /*const {
         source

@@ -16,6 +16,9 @@ interface EmbeddingsStore {
     embeddingsChainType: string;
     setEmbeddingsChainType: (index: string) => void;
 
+    embeddingsModel: string;
+    setEmbeddingsModel: (index: string) => void;
+
 }
 
 export const useEmbeddingsStore = create<EmbeddingsStore>()(
@@ -33,6 +36,9 @@ export const useEmbeddingsStore = create<EmbeddingsStore>()(
 
         embeddingsChainType: '',
         setEmbeddingsChainType: (val: string) => set({embeddingsChainType: val}),
+
+        embeddingsModel: 'openai',
+        setEmbeddingsModel: (val: string) => set({embeddingsModel: val}),
 
     }),
     {

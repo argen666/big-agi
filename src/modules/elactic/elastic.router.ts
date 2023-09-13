@@ -3,8 +3,10 @@ import {OpenAIEmbeddings} from "langchain/embeddings/openai";
 import {Client, ClientOptions} from "@elastic/elasticsearch";
 import {ElasticClientArgs, ElasticVectorSearch} from "langchain/vectorstores/elasticsearch";
 import {z} from "zod";
-import {useEmbeddingsStore} from "~/modules/llms/openai/embeddings/store-embeddings";
 import {Document as LDocument} from "langchain/document";
+import {HuggingFaceBgeEmbeddings} from "~/modules/llms/openai/embeddings/bge";
+//import { HuggingFaceTransformersEmbeddings } from "langchain/embeddings/hf_transformers";
+const {HuggingFaceTransformersEmbeddings} = await import('langchain/embeddings/hf_transformers');
 
 const searchDocsInputSchema = z.object({
     question: z.string(),
@@ -13,6 +15,7 @@ const searchDocsInputSchema = z.object({
     docsCount: z.string(),
     chainType: z.string().nullable(),
     openAIKey: z.string(),
+    embeddingsModel: z.string(),
 });
 
 const searchDocsInputSchema2 = z.object({
@@ -36,7 +39,7 @@ export const elasticRouter = createTRPCRouter({
 
             const res = await callElastic(input);
             if (res.type === 'success') {
-               return res;
+                return res;
             }
 
             if (res.type === 'error')
@@ -45,41 +48,26 @@ export const elasticRouter = createTRPCRouter({
         }),
 });
 
-
-export function elevenlabsAccess(elevenKey: string | undefined, apiPath: string): { headers: HeadersInit, url: string } {
-    // API key
-    elevenKey = (elevenKey || process.env.ELEVENLABS_API_KEY || '').trim();
-    if (!elevenKey)
-        throw new Error('Missing ElevenLabs API key.');
-
-    // API host
-    let host = (process.env.ELEVENLABS_API_HOST || 'api.elevenlabs.io').trim();
-    if (!host.startsWith('http'))
-        host = `https://${host}`;
-    if (host.endsWith('/') && apiPath.startsWith('/'))
-        host = host.slice(0, -1);
-
-    return {
-        headers: {
-            'Content-Type': 'application/json',
-            'xi-api-key': elevenKey,
-        },
-        url: host + apiPath,
-    };
-}
-
 async function callElastic(input) {
     try {
-        const {question,dbHost,indexdb,docsCount,chainType,openAIKey} = input;
+        const {question, dbHost, indexdb, docsCount, chainType, openAIKey, embeddingsModel} = input;
 
         if (!question)
             throw new Error('Invalid options');
         const index = !indexdb ? "index" : indexdb
         let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n If you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\n";
 
-        const embeddings = new OpenAIEmbeddings({
-            openAIApiKey: openAIKey//fixme!!!!
-        });
+        let embeddings
+        if (embeddingsModel === 'openai') {
+            embeddings = new OpenAIEmbeddings({
+                openAIApiKey: openAIKey
+            });
+        } else if (embeddingsModel === 'bge-large-en') {
+            embeddings = new HuggingFaceBgeEmbeddings({
+                    modelName: "BAAI/bge-large-en",
+                }
+            )
+        }
 
         const config: ClientOptions = {
             node: dbHost,
@@ -93,7 +81,7 @@ async function callElastic(input) {
         // const docsearch = await PineconeStore.fromExistingIndex(embeddings, {pineconeIndex});
 
         const docsearch = await ElasticVectorSearch.fromExistingIndex(embeddings, clientArgs);
-        const docs = await similaritySearch(embeddings,clientArgs, question, docsCount);
+        const docs = await similaritySearch(embeddings, clientArgs, question, docsCount);
         let result: string = ""
         let resultDocs: any = ""
         if (chainType && chainType !== "" && chainType !== "none") {
@@ -129,12 +117,12 @@ async function callElastic(input) {
     }
 }
 
-async function similaritySearch(embeddings,clientArgs,
-    query: string,
-    k = 4,
+async function similaritySearch(embeddings, clientArgs,
+                                query: string,
+                                k = 4,
 ): Promise<LDocument[]> {
     const results = await similaritySearchVectorWithScore(
-        await embeddings.embedQuery(query),clientArgs,
+        await embeddings.embedQuery(query), clientArgs,
         k,
     );
 
@@ -142,7 +130,7 @@ async function similaritySearch(embeddings,clientArgs,
 }
 
 async function similaritySearchVectorWithScore(
-    query: number[],clientArgs: ElasticClientArgs,
+    query: number[], clientArgs: ElasticClientArgs,
     k: number,
 ): Promise<[LDocument, number][]> {
     const qorig = {
@@ -157,7 +145,17 @@ async function similaritySearchVectorWithScore(
         },
     };
     //const q = {script_score: {query: {match_all: {}}, script: {source: "cosineSimilarity(params.query_vector, 'vector') + 1.0", params: {query_vector: query}}}};
-    const q = {'query': {'script_score': {'query': {'match_all': {}}, 'script': {'source': "cosineSimilarity(params.query_vector, 'vector') + 1.0", 'params': {'query_vector': query}}}}, 'size': k};
+    const q = {
+        'query': {
+            'script_score': {
+                'query': {'match_all': {}},
+                'script': {
+                    'source': "cosineSimilarity(params.query_vector, 'vector') + 1.0",
+                    'params': {'query_vector': query}
+                }
+            }
+        }, 'size': k
+    };
     const result = await clientArgs.client.search(q);
     console.log(result)
 

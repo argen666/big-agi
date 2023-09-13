@@ -90,7 +90,8 @@ async function getResultWithEmbeddings(question: string, model: string) {
         embeddingsIndex: indexdb,
         embeddingsDocs: docsCount,
         embeddingsChainType: chainType,
-        modelTemperature: modelTemp
+        modelTemperature: modelTemp,
+        embeddingsModel: embeddingsModel
     } = useEmbeddingsStore.getState();
 
     const llm = findLLMOrThrow(model);
@@ -102,7 +103,8 @@ async function getResultWithEmbeddings(question: string, model: string) {
         indexdb: indexdb,
         docsCount: docsCount,
         chainType: chainType,
-        openAIKey: openAISetup.oaiKey
+        openAIKey: openAISetup.oaiKey,
+        embeddingsModel: embeddingsModel
     });
     console.log(docsString)
     return docsString
