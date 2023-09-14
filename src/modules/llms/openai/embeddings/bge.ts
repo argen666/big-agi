@@ -2,6 +2,7 @@ import { Pipeline, pipeline, env } from "@xenova/transformers";
 import {Embeddings, EmbeddingsParams} from "langchain/embeddings/base";
 //import { chunkArray } from "langchain/dist/util/chunk.js";
 env.remoteHost = 'https://cashq-models.storage.googleapis.com'; //fixme move to config
+env.cacheDir = process.cwd()
 export interface HuggingFaceBgeEmbeddingsParams
     extends EmbeddingsParams {
     /** Model name to use */
