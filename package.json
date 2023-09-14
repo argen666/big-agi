@@ -7,8 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "",
-    "build": "curl -O https://cashq-models.storage.googleapis.com/models.zip;unzip ./models.zip; next build",
+    "prebuild": "curl -O https://cashq-models.storage.googleapis.com/models.zip;unzip ./models.zip;",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
