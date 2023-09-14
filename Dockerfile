@@ -3,6 +3,8 @@ FROM node:18-alpine as test-target
 ENV NODE_ENV=development
 ENV PATH $PATH:/usr/src/app/node_modules/.bin
 
+RUN apk update && apk add --no-cache gcompat libstdc++
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -18,7 +20,6 @@ COPY . .
 FROM test-target as build-target
 ENV NODE_ENV=production
 
-RUN apk add --no-cache libstdc++ gcompat
 # Use build tools, installed as development packages, to produce a release build.
 RUN npm run build
 
