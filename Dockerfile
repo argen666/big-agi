@@ -18,6 +18,7 @@ COPY . .
 FROM test-target as build-target
 ENV NODE_ENV=production
 
+RUN apk add --no-cache libstdc++ gcompat
 # Use build tools, installed as development packages, to produce a release build.
 RUN npm run build
 
