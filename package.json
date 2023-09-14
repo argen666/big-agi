@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "",
-    "build": "wget https://cashq-models.storage.googleapis.com/models.zip;unzip ./models.zip; next build",
+    "build": "curl -O https://cashq-models.storage.googleapis.com/models.zip;unzip ./models.zip; next build",
     "start": "next start",
     "lint": "next lint"
   },
