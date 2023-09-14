@@ -1,10 +1,10 @@
 # Test
-#FROM node:18-alpine as test-target
-FROM node:18 as test-target
+FROM node:18-alpine as test-target
 ENV NODE_ENV=development
 ENV PATH $PATH:/usr/src/app/node_modules/.bin
 
 #RUN apk update && apk add --no-cache gcompat libstdc++
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /usr/src/app
 
