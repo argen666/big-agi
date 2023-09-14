@@ -59,11 +59,11 @@ async function callElastic(input) {
 
         let embeddings
         if (embeddingsModel === 'openai') {
-            embeddings = new OpenAIEmbeddings({
+            embeddings = await new OpenAIEmbeddings({
                 openAIApiKey: openAIKey
             });
         } else if (embeddingsModel === 'bge-large-en') {
-            embeddings = new HuggingFaceBgeEmbeddings({
+            embeddings = await new HuggingFaceBgeEmbeddings({
                     modelName: "BAAI/bge-large-en",
                 }
             )
@@ -80,7 +80,7 @@ async function callElastic(input) {
         //const pineconeIndex = client.Index(index);
         // const docsearch = await PineconeStore.fromExistingIndex(embeddings, {pineconeIndex});
 
-        const docsearch = await ElasticVectorSearch.fromExistingIndex(embeddings, clientArgs);
+        //const docsearch = await ElasticVectorSearch.fromExistingIndex(embeddings, clientArgs);
         const docs = await similaritySearch(embeddings, clientArgs, question, docsCount);
         let result: string = ""
         let resultDocs: any = ""
