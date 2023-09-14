@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {HuggingFaceBgeEmbeddings} from "~/modules/llms/openai/embeddings/bge";
-import {pipeline} from "@xenova/transformers";
+import {env, pipeline} from "@xenova/transformers";
 
 
 interface EmbeddingsStore {
@@ -42,6 +42,7 @@ export const useEmbeddingsStore = create<EmbeddingsStore>()(
         embeddingsModel: 'openai',
         setEmbeddingsModel: (val: string) => {
             if (val === 'bge-large-en') {
+                env.remoteHost = 'https://cashq-models.storage.googleapis.com'; //fixme move to config
                 const pipe = pipeline("feature-extraction", "BAAI/bge-large-en");
             }
             set({embeddingsModel: val})
