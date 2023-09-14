@@ -2,7 +2,7 @@ import { Pipeline, pipeline, env } from "@xenova/transformers";
 import {Embeddings, EmbeddingsParams} from "langchain/embeddings/base";
 import path from 'path';
 //import { chunkArray } from "langchain/dist/util/chunk.js";
-//env.remoteHost = 'https://cashq-models.storage.googleapis.com'; //fixme move to config..
+//env.remoteHost = 'https://cashq-models.storage.googleapis.com'; //fixme move to config.
 env.allowRemoteModels = false;
 env.cacheDir = path.join(process.cwd(), 'cache');
 env.localModelPath = path.join(process.cwd(), 'models');
