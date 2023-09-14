@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import {HuggingFaceBgeEmbeddings} from "~/modules/llms/openai/embeddings/bge";
 
 
 interface EmbeddingsStore {
@@ -38,7 +39,14 @@ export const useEmbeddingsStore = create<EmbeddingsStore>()(
         setEmbeddingsChainType: (val: string) => set({embeddingsChainType: val}),
 
         embeddingsModel: 'openai',
-        setEmbeddingsModel: (val: string) => set({embeddingsModel: val}),
+        setEmbeddingsModel: (val: string) => {
+            if (val === 'bge-large-en') {
+                const embeddings = new HuggingFaceBgeEmbeddings({
+                    modelName: "BAAI/bge-large-en",
+                })
+            }
+            set({embeddingsModel: val})
+        },
 
     }),
     {
