@@ -3,11 +3,18 @@ FROM node:18-alpine as test-target
 ENV NODE_ENV=development
 ENV PATH $PATH:/usr/src/app/node_modules/.bin
 
-RUN apk update && apk add --no-cache gcompat libstdc++
-RUN apk add --no-cache libc6-compat
-RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
-
 WORKDIR /usr/src/app
+
+RUN apk update && apk add --no-cache gcompat libstdc++
+#RUN apk add --no-cache libc6-compat
+RUN apk add libc6-compat
+#RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
+#RUN ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+RUN ls /lib/ld-*
+RUN ls /lib64/ld-*
+
+RUN npm install onnxruntime-web..................................................................................................................................................................................................................
+RUN npm install onnxruntime-node
 
 COPY package*.json ./
 
