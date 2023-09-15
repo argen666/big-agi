@@ -13,7 +13,7 @@ RUN apk add libc6-compat
 RUN ls /lib/ld-*
 RUN ls /lib64/ld-*
 
-RUN npm install onnxruntime-web..................................................................................................................................................................................................................
+RUN npm install onnxruntime-web
 RUN npm install onnxruntime-node
 
 COPY package*.json ./
