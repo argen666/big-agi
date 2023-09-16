@@ -82,17 +82,17 @@ export function AppBarSwitcherItem() {
       <Box sx={{ flex: 1 }} />
 
       {/* Group 2: Social Links */}
-      <ButtonGroup
-        variant='solid'
-        sx={{
-          '--ButtonGroup-separatorSize': '0px',
-          '--ButtonGroup-connected': '0',
-          gap: 0,
-        }}
-      >
-        <BringTheLove text='Discord' icon={<DiscordIcon />} link={Brand.URIs.SupportInvite} />
-        <BringTheLove text='GitHub' icon={<GitHubIcon />} link={Brand.URIs.OpenRepo} />
-      </ButtonGroup>
+      {/*<ButtonGroup*/}
+      {/*  variant='solid'*/}
+      {/*  sx={{*/}
+      {/*    '--ButtonGroup-separatorSize': '0px',*/}
+      {/*    '--ButtonGroup-connected': '0',*/}
+      {/*    gap: 0,*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <BringTheLove text='Discord' icon={<DiscordIcon />} link={Brand.URIs.SupportInvite} />*/}
+      {/*  <BringTheLove text='GitHub' icon={<GitHubIcon />} link={Brand.URIs.OpenRepo} />*/}
+      {/*</ButtonGroup>*/}
 
     </ListItem>
   );

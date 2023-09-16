@@ -8,7 +8,7 @@ import { AppLayout } from '~/common/layout/AppLayout';
 
 export default function NewsPage() {
   // update the last seen news version
-  useMarkNewsAsSeen();
+  //useMarkNewsAsSeen();
 
   return (
     <AppLayout suspendAutoModelsSetup>

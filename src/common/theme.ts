@@ -1,5 +1,5 @@
 import createCache from '@emotion/cache';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono, Poppins } from 'next/font/google';
 import { extendTheme } from '@mui/joy';
 import { keyframes } from '@emotion/react';
 
@@ -15,7 +15,8 @@ export const settingsCol1Width = 150;
 
 // Theme & Fonts
 
-const inter = Inter({
+//const inter = Inter({
+const inter = Poppins({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -39,7 +40,8 @@ export const theme = extendTheme({
       palette: {
         neutral: {
           plainColor: 'var(--joy-palette-neutral-800)',     // increase contrast a bit - Menu text
-          solidBg: 'var(--joy-palette-neutral-700)',        // AppBar: background (#32383E)
+          //solidBg: 'var(--joy-palette-neutral-700)',        // AppBar: background (#32383E)
+          solidBg: '#6ddb7e',        // AppBar: background (#32383E)
           solidHoverBg: 'var(--joy-palette-neutral-800)',   // AppBar: buttons background on hover
         },
         text: {
