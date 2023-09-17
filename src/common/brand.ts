@@ -8,8 +8,10 @@
  */
 export const Brand = {
   Title: {
-    Base: 'big-AGI',
-    Common: (process.env.NODE_ENV === 'development' ? '[DEV] ' : '') + 'big-AGI',
+    //Base: 'big-AGI',
+    //Common: (process.env.NODE_ENV === 'development' ? '[DEV] ' : '') + 'big-AGI',
+    Base: 'CashQ ReguNavigator',
+    Common: (process.env.NODE_ENV === 'development' ? '[DEV] ' : '') + 'CashQ ReguNavigator',
   },
   Meta: {
     Description: 'Leading open-source AI web interface to help you learn, think, and do. AI personas, superior privacy, advanced features, and fun UX.',

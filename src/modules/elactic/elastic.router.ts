@@ -55,7 +55,7 @@ async function callElastic(input) {
         if (!question)
             throw new Error('Invalid options');
         const index = !indexdb ? "index" : indexdb
-        let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n If you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\n";
+        //let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n If you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\n";
 
         let embeddings
         if (embeddingsModel === 'openai') {
@@ -96,7 +96,7 @@ async function callElastic(input) {
         } else {
             //result = docs.map(doc => doc.pageContent).join("\\n\\n");
             result = docs.map(doc => JSON.stringify(doc, null, 2)).join("\n\n");
-            result = defaultPrompt + result;
+            //result = defaultPrompt + result;
         }
         const payload = {
             type: 'success',

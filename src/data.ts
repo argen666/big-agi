@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export type SystemPurposeId = 'Catalyst' | 'Custom' | 'Designer' | 'Developer' | 'Executive' | 'Generic' | 'Scientist';
+export type SystemPurposeId = 'Catalyst' | 'Custom' | 'Designer' | 'Developer' | 'Executive' | 'Legal' | 'Generic' | 'Scientist';
 
 export const defaultSystemPurposeId: SystemPurposeId = 'Generic';
 
@@ -45,6 +45,15 @@ export const SystemPurposes: { [key in SystemPurposeId]: SystemPurposeData } = {
       'Knowledge cutoff: 2021-09\nCurrent date: {{Today}}',
     symbol: '👔',
     examples: ['draft a letter to the board', 'write a memo to the CEO', 'help me with a SWOT analysis', 'how do I team build?', 'improve decision-making'],
+  },
+  Legal: {
+    title: 'Legal',
+    description: 'Helps you with legal questions',
+    systemMessage: 'You are a GPT legal advisor bot specilized in fintech law. Your job is to provide legal assistance by asking questions, then offering advice or guidance based on the information provided.' +
+        'You explain your process step-by-step and concisely. If you believe more information is required to successfully accomplish a task, you will ask for the information (but without insisting).\n' +
+        'Knowledge cutoff: {{Today}}\nCurrent date: {{Today}}',
+    symbol: '👔',
+    examples: ['', '', '', '', ''],
   },
   Designer: {
     title: 'Designer',

@@ -114,9 +114,13 @@ export function updatePurposeInHistory(conversationId: string, history: DMessage
     const systemMessageIndex = history.findIndex(m => m.role === 'system');
     const systemMessage: DMessage = systemMessageIndex >= 0 ? history.splice(systemMessageIndex, 1)[0] : createDMessage('system', '');
     if (!systemMessage.updated && purposeId && SystemPurposes[purposeId]?.systemMessage) {
+        //let defaultPrompt: string = "Use the following pieces of context to answer the users question. \n----------------\n";
+        let defaultPrompt: string = "\n----------------\n";
         systemMessage.purposeId = purposeId;
         //systemMessage.text = systemMessageNew ? systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
-        systemMessage.text = systemMessageNew ? systemMessage.text+systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
+        //systemMessage.text = systemMessageNew ? systemMessage.text+systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]);
+        //systemMessage.text = systemMessage.text ? systemMessage.text+systemMessageNew : SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]) + systemMessageNew;
+        systemMessage.text = SystemPurposes[purposeId].systemMessage.replaceAll('{{Today}}', new Date().toISOString().split('T')[0]) + defaultPrompt + systemMessageNew;
     }
     history.unshift(systemMessage);
     useChatStore.getState().setMessages(conversationId, history);
