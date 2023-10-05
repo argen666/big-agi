@@ -33,7 +33,7 @@ export const useEmbeddingsStore = create<EmbeddingsStore>()(
         embeddingsIndex: '',
         setEmbeddingsIndex: (val: string) => set({embeddingsIndex: val}),
 
-        embeddingsDocs: 3,
+        embeddingsDocs: 10,
         setEmbeddingsDocs: (val: number) => set({embeddingsDocs: val}),
 
         embeddingsChainType: '',
