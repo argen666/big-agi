@@ -154,7 +154,7 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
 
 
 // this will help with adding metadata to the models
-const knownBases = [
+/*const knownBases = [
   {
     id: 'gpt-4-32k-0613',
     label: 'GPT-4-32k (0613)',
@@ -185,13 +185,46 @@ const knownBases = [
     context: 4096,
     description: 'Unknown, please let us know the ID',
   },
-];
+];*/
 
+const knownBases = [
+  {
+    id: 'gpt-4-0613',
+    label: 'CashQ-4',
+    context: 8192,
+    description: 'Insightful, big thinker, slower, pricey',
+  },
+    {
+    id: 'gpt-4',
+    label: 'GPT-4 (Original)',
+    context: 8192,
+    description: 'Insightful, big thinker, slower, pricey',
+  },
+  {
+    id: 'gpt-3.5-turbo-16k',
+    label: '3.5-Turbo-16k (Original)',
+    context: 16384,
+    description: 'Fair speed and smarts, large context',
+  },
+  {
+    id: 'gpt-3.5-turbo',
+    label: '3.5-Turbo (Original)',
+    context: 4097,
+    description: 'Fair speed and smarts',
+  },
+  {
+    id: '',
+    label: '?:',
+    context: 4096,
+    description: 'Unknown, please let us know the ID',
+  },
+];
 
 function openAIModelToDLLM(model: OpenAI.Wire.Models.ModelDescription, source: DModelSource): DLLM<LLMOptionsOpenAI> {
   const base = knownBases.find(base => model.id.startsWith(base.id)) || knownBases[knownBases.length - 1];
   const suffix = model.id.slice(base.id.length).trim();
-  const hidden = !suffix || suffix.startsWith('-03');
+  //const hidden = !suffix || suffix.startsWith('-03');
+  const hidden = !model.id.startsWith('gpt-4');
   return {
     id: `${source.id}-${model.id}`,
     label: base.label + (suffix ? ` (${suffix.replaceAll('-', ' ').trim()})` : ''),

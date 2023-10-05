@@ -101,7 +101,7 @@ async function getResultWithEmbeddings(question: string, model: string) {
         question: question,
         dbHost: dbHost,
         indexdb: indexdb,
-        docsCount: docsCount,
+        docsCount: docsCount.toString(),
         chainType: chainType,
         openAIKey: openAISetup.oaiKey,
         embeddingsModel: embeddingsModel

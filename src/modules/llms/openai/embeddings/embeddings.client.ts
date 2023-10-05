@@ -2,18 +2,22 @@ import {Brand} from "~/common/brand";
 import { useEmbeddingsStore } from './store-embeddings';
 import { useModelsStore, useSourceSetup } from "~/modules/llms/store-llms";
 import { DLLM, DModelSource, DModelSourceId } from '~/modules/llms/llm.types';
+import {string} from "zod";
 
-export const requireUserKeyEmbeddings = !process.env.HAS_SERVER_KEY_OPENAI_EMBEDDINGS;
+export const requireUserKeyEmbeddings = !process.env.HAS_SERVER_KEY_EMBEDDINGS;
+export const requireIndexEmbeddings = !process.env.HAS_SERVER_INDEX_EMBEDDINGS;
 
 export const isValidDatabaseUrl = (apiKey?: string) => !!apiKey /*&& apiKey.startsWith("redis")*/;
 
-export const embeddingsDefaultIndex: string = 'index';
+export const embeddingsDefaultIndex: string = process.env.EMBEDDINGS_INDEX || '';
 
-export const embeddingsDefaultDocCount: string = '1';
+export const embeddingsDefaultApiKey: string = process.env.EMBEDDINGS_API_KEY || '';
+
+export const embeddingsDefaultDocCount: string = '3';
 
 export const embeddingsDefaultChainType: string = '';
 
-export const embeddingsDefaultEmbeddingsModel: string = 'openai';
+export const embeddingsDefaultEmbeddingsModel: string = process.env.EMBEDDINGS_MODEL || 'openai';
 
 export async function callPublish(question: string, model: string): Promise<any | null> {
     /*const {
@@ -27,13 +31,14 @@ export async function callPublish(question: string, model: string): Promise<any 
         embeddingsChainType: chainType,
         modelTemperature: modelTemp
     } = useEmbeddingsStore.getState();
+    //let docsCountStr: string = '\''+docsCount.toString()+'\'';
     try {
         const body = {
             to: "elastic.io",
             question: question,
             dbHost: dbHost,
             indexdb: index,
-            docsCount: docsCount,
+            docsCount: '5',//docsCount,
             openaiKey: 'source.oaiKey',
             modelTemp: modelTemp,
             origin: getOrigin(),

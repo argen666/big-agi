@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export type SystemPurposeId = 'Catalyst' | 'Custom' | 'Designer' | 'Developer' | 'Executive' | 'Legal' | 'Generic' | 'Scientist';
 
-export const defaultSystemPurposeId: SystemPurposeId = 'Generic';
+export const defaultSystemPurposeId: SystemPurposeId = 'Legal';
 
 type SystemPurposeData = {
   title: string;

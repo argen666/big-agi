@@ -18,7 +18,7 @@ export const usePurposeStore = create<PurposeStore>()(
     (set) => ({
 
       // default state
-      hiddenPurposeIDs: ['Designer'],
+      hiddenPurposeIDs: ['Catalyst', 'Custom', 'Designer', 'Developer', 'Executive', 'Generic', 'Scientist'],
 
       toggleHiddenPurposeId: (purposeId: string) => {
         set(state => {

@@ -20,7 +20,7 @@ import {
   embeddingsDefaultIndex,
   embeddingsDefaultDocCount,
   embeddingsDefaultChainType,
-  requireUserKeyEmbeddings, embeddingsDefaultEmbeddingsModel,
+  requireUserKeyEmbeddings, requireIndexEmbeddings, embeddingsDefaultEmbeddingsModel, embeddingsDefaultApiKey,
 } from './embeddings.client';
 
 
@@ -38,6 +38,7 @@ export function EmbeddingsSettings() {
   }), shallow);
 
   const requiresKey = requireUserKeyEmbeddings;
+  const requiresIndex = requireIndexEmbeddings;
   const isValidKey = apiKey ? isValidDatabaseUrl(apiKey) : !requiresKey;
 
   const handleToggleApiKeyVisibility = () => setShowApiKeyValue(!showApiKeyValue);
@@ -46,12 +47,25 @@ export function EmbeddingsSettings() {
 
   const handleChainTypeChange = (e: any, value: string | null) => value && setChainType(value);
 
-  const handleEmbeddingsModelChange = (e: any, value: string | null) => value && setEmbeddingsModel(value);
+  //const handleEmbeddingsModelChange = (e: any, value: string | null) => value && setEmbeddingsModel(value);
+
+  const handleEmbeddingsModelChange = (e: any, value: string | null) => {
+    if (value) {
+      setEmbeddingsModel(value);
+      const selectedModel = embeddingModels.find(model => model.name_model === value);
+      if (selectedModel) {
+        setIndex(selectedModel.name_index);
+      }
+    }
+  };
 
   const colWidth = 150;
 
   const chainTypes = ['stuff', 'map_reduce', 'refine', 'map_rerank'];
-  const embeddingModels = ['openai', 'bge-large-en'];
+  const embeddingModelsOld = ['openai', 'bge-large-en'];
+  const embeddingModels = [{"name_model":'openai',"name_index":"cashq_legal"}, {"name_model":'bge-large-en',"name_index":"cashq_legal-bge"}];
+  console.log("embeddingsDefaultIndex:"+embeddingsDefaultIndex);
+  console.log("embeddingsDefaultApiKey:"+embeddingsDefaultApiKey);
 
   return (
     <Section title='📚 Embeddings' collapsible collapsed disclaimer='Supported vector database: Elastic' sx={{ mt: 2 }}>
@@ -71,8 +85,8 @@ export function EmbeddingsSettings() {
               }}
           >
             {embeddingModels?.map((mdl, idx) => (
-                <Option key={'embedding-model-' + idx} value={mdl}>
-                  {mdl}
+                <Option key={'embedding-model-' + idx} value={mdl.name_model}>
+                  {'cashq-'+mdl.name_model}
                 </Option>
             ))}
           </Select>
@@ -103,18 +117,18 @@ export function EmbeddingsSettings() {
 
         <FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>
           <Box>
-            <Tooltip title='Pinecone index name'>
+            <Tooltip title='Database index name'>
               <FormLabel sx={{ minWidth: colWidth }}>
                 Index name <InfoOutlinedIcon sx={{ mx: 0.5 }} />
               </FormLabel>
             </Tooltip>
             <FormHelperText>
-              {index ? '' : ''}
+              {requiresIndex ? '(required)' : '(optional)'}
             </FormHelperText>
           </Box>
           <Input
             aria-label='Index name'
-            variant='outlined' placeholder=''
+            variant='outlined' type='text' placeholder={requiresIndex ? 'required' : 'optional'} error={requiresIndex}
             value={index || embeddingsDefaultIndex} onChange={(e) => setIndex(e.target.value)}
             slotProps={{ input: { sx: { width: '100%' } } }}
             sx={{ width: '100%' }}
@@ -151,7 +165,7 @@ export function EmbeddingsSettings() {
             Chain type
           </FormLabel>
           <Select
-              variant='outlined' placeholder={isValidKey ? 'Select a model' : 'Enter API Key'}
+              variant='outlined' placeholder={isValidKey ? 'Select a model' : 'Select a model'}
               value={chainType || embeddingsDefaultChainType} onChange={handleChainTypeChange}
               disabled
               indicator={<KeyboardArrowDownIcon />}

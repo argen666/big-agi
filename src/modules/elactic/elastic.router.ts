@@ -50,8 +50,12 @@ export const elasticRouter = createTRPCRouter({
 
 async function callElastic(input) {
     try {
-        const {question, dbHost, indexdb, docsCount, chainType, openAIKey, embeddingsModel} = input;
-
+        const {question, docsCount, chainType} = input;
+        const dbHost = input.dbHost || process.env.EMBEDDINGS_API_KEY;
+        const embeddingsModel = input.embeddingsModel || process.env.EMBEDDINGS_MODEL;
+        const indexdb = input.indexdb || process.env.EMBEDDINGS_INDEX;
+        const openAIKey = input.openAIKey || process.env.OPENAI_API_KEY;
+        console.log('dbHost:', dbHost, 'embeddingsModel:', embeddingsModel, 'indexdb:', indexdb, 'openAIKey:', openAIKey);
         if (!question)
             throw new Error('Invalid options');
         const index = !indexdb ? "index" : indexdb

@@ -14,6 +14,8 @@ let nextConfig = {
     HAS_SERVER_KEY_ELEVENLABS: !!process.env.ELEVENLABS_API_KEY,
     HAS_SERVER_KEY_OPENAI: !!process.env.OPENAI_API_KEY,
     HAS_SERVER_KEY_PRODIA: !!process.env.PRODIA_API_KEY,
+    HAS_SERVER_KEY_EMBEDDINGS: !!process.env.EMBEDDINGS_API_KEY,
+    HAS_SERVER_INDEX_EMBEDDINGS: !!process.env.EMBEDDINGS_INDEX,
   },
   webpack(config, { isServer, dev }) {
     // @mui/joy: anything material gets redirected to Joy
@@ -32,5 +34,4 @@ let nextConfig = {
 // conditionally enable the nextjs bundle analyzer
 if (process.env.ANALYZE_BUNDLE)
   nextConfig = require('@next/bundle-analyzer')()(nextConfig);
-
 module.exports = nextConfig;

@@ -28,13 +28,14 @@ import { runEmbeddingsUpdatingState } from './editors/agi-embeddings';
 const SPECIAL_ID_ALL_CHATS = 'all-chats';
 
 // definition of chat modes
-export type ChatModeId = 'immediate' | 'immediate-follow-up' | 'react' | 'write-user' | 'embeddings';
+//export type ChatModeId = 'immediate' | 'immediate-follow-up' | 'react' | 'write-user' | 'embeddings';
+export type ChatModeId = 'immediate' | 'embeddings';
 export const ChatModeItems: { [key in ChatModeId]: { label: string; description: string | React.JSX.Element; experimental?: boolean } } = {
     'immediate': {
         label: 'Chat',
         description: 'AI-powered responses',
     },
-    'immediate-follow-up': {
+    /*'immediate-follow-up': {
         label: 'Chat & Follow-up',
         description: 'Chat with follow-up questions',
         experimental: true,
@@ -46,9 +47,9 @@ export const ChatModeItems: { [key in ChatModeId]: { label: string; description:
     'write-user': {
         label: 'Write',
         description: 'No AI responses',
-    },
+    },*/
     'embeddings': {
-        label: 'Embeddings',
+        label: 'ReguNavigator',
         description: 'Answer your questions with custom knowledge base',
     },
 };
@@ -57,7 +58,8 @@ export const ChatModeItems: { [key in ChatModeId]: { label: string; description:
 export function AppChat() {
 
     // state
-    const [chatModeId, setChatModeId] = React.useState<ChatModeId>('immediate');
+    //const [chatModeId, setChatModeId] = React.useState<ChatModeId>('immediate');
+    const [chatModeId, setChatModeId] = React.useState<ChatModeId>('embeddings');
     const [isMessageSelectionMode, setIsMessageSelectionMode] = React.useState(false);
     const [tradeConfig, setTradeConfig] = React.useState<TradeConfig | null>(null);
     const [clearConfirmationId, setClearConfirmationId] = React.useState<string | null>(null);

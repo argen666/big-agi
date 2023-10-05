@@ -30,16 +30,16 @@ export const useEmbeddingsStore = create<EmbeddingsStore>()(
         embeddingsApiKey: '',
         setEmbeddingsApiKey: (val: string) => set({embeddingsApiKey: val}),
 
-        embeddingsIndex: 'index',
+        embeddingsIndex: '',
         setEmbeddingsIndex: (val: string) => set({embeddingsIndex: val}),
 
-        embeddingsDocs: 1,
+        embeddingsDocs: 3,
         setEmbeddingsDocs: (val: number) => set({embeddingsDocs: val}),
 
         embeddingsChainType: '',
         setEmbeddingsChainType: (val: string) => set({embeddingsChainType: val}),
 
-        embeddingsModel: 'openai',
+        embeddingsModel: '',
         setEmbeddingsModel: (val: string) => {
             /*if (val === 'bge-large-en') {
                 env.remoteHost = 'https://cashq-models.storage.googleapis.com'; //fixme move to config
