@@ -69,7 +69,8 @@ export function makeAvatar(messageAvatar: string | null, messageRole: DMessage['
             ? 'https://i.giphy.com/media/5t9ujj9cMisyVjUZ0m/giphy.webp'
             : messageOriginLLM?.startsWith('react-')
               ? 'https://i.giphy.com/media/l44QzsOLXxcrigdgI/giphy.webp'
-              : 'https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp'}
+              //: 'https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp'}
+              : 'https://i.giphy.com/media/l44QzsOLXxcrigdgI/giphy.webp'}
           sx={{ ...mascotSx, borderRadius: 'var(--joy-radius-sm)' }}
         />;
       }

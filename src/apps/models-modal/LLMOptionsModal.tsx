@@ -109,11 +109,17 @@ export function LLMOptionsModal(props: { id: DLLMId }) {
         <FormLabel onClick={() => setShowDetails(!showDetails)} sx={{ minWidth: 80, cursor: 'pointer', textDecoration: 'underline' }}>
           Details
         </FormLabel>
-        {showDetails && <Typography level='body-sm' sx={{ display: 'block' }}>
-          [{llm.id}]: {llm.options.llmRef && `${llm.options.llmRef} · `} context tokens: {llm.contextTokens?.toLocaleString()} · {
-          llm.created && `created: ${(new Date(llm.created * 1000)).toLocaleString()}`} · description: {llm.description}
-          {/*· tags: {llm.tags.join(', ')}*/}
-        </Typography>}
+        {showDetails && (llm.label.toLowerCase().includes('cashq') ?
+                <Typography level='body-sm' sx={{ display: 'block', color: 'red' }}>
+                  [{'cashq-model'}]: {'cashq' && ` · `} context tokens: {llm.contextTokens?.toLocaleString()} · {
+                  llm.created && `created: ${new Date(new Date().setMonth(new Date().getMonth() - 1)).toLocaleDateString()}`} · description: {llm.description}
+                </Typography>
+                :
+                <Typography level='body-sm' sx={{ display: 'block' }}>
+                  [{llm.id}]: {llm.options.llmRef && `${llm.options.llmRef} · `} context tokens: {llm.contextTokens?.toLocaleString()} · {
+                  llm.created && `created: ${(new Date(llm.created * 1000)).toLocaleString()}`} · description: {llm.description}
+                </Typography>
+        )}
       </FormControl>
 
     </GoodModal>

@@ -4,6 +4,7 @@ import { SystemPurposes } from '../../../data';
 
 export function prettyBaseModel(model: string | undefined): string {
   if (!model) return '';
+  if (model) return 'ai';
   if (model.includes('gpt-4-32k')) return 'gpt-4-32k';
   if (model.includes('gpt-4')) return 'gpt-4';
   if (model.includes('gpt-3.5-turbo-16k')) return '3.5 Turbo 16k';
@@ -27,7 +28,8 @@ export function conversationToMarkdown(conversation: DConversation, hideSystemMe
     switch (message.role) {
       case 'system':
         sender = '✨ System message';
-        text = '<img src="https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp" width="48" height="48" alt="typing fast meme"/>\n\n' + '*' + text + '*';
+        //text = '<img src="https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp" width="48" height="48" alt="typing fast meme"/>\n\n' + '*' + text + '*';
+        text = '<img src="https://i.giphy.com/media/l44QzsOLXxcrigdgI/giphy.webp" width="48" height="48" alt="typing fast meme"/>\n\n' + '*' + text + '*';
         break;
       case 'assistant':
         const purpose = message.purposeId || conversation.systemPurposeId || null;

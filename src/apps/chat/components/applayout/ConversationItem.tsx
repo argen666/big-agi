@@ -115,7 +115,8 @@ export function ConversationItem(props: {
           ? (
             <Avatar
               alt='typing' variant='plain'
-              src='https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp'
+              //src='https://i.giphy.com/media/jJxaUysjzO9ri/giphy.webp'
+              src='https://i.giphy.com/media/l44QzsOLXxcrigdgI/giphy.webp'
               sx={{
                 width: 24,
                 height: 24,

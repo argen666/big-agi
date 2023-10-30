@@ -192,7 +192,7 @@ const knownBases = [
     id: 'gpt-4-0613',
     label: 'CashQ-4',
     context: 8192,
-    description: 'Insightful, big thinker, slower, pricey',
+    description: 'ReguNavigator model',
   },
     {
     id: 'gpt-4',
