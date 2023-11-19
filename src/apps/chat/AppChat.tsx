@@ -49,7 +49,7 @@ export const ChatModeItems: { [key in ChatModeId]: { label: string; description:
         description: 'No AI responses',
     },*/
     'embeddings': {
-        label: 'ReguNavigator',
+        label: 'LawLoom',
         description: 'Answer your questions with custom knowledge base',
     },
 };
