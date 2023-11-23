@@ -12,6 +12,7 @@ import '~/common/styles/CodePrism.css'
 import '~/common/styles/GithubMarkdown.css';
 import { Brand } from '~/common/brand';
 import { createEmotionCache, theme } from '~/common/theme';
+import {UserProvider} from "@auth0/nextjs-auth0/client";
 
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -34,6 +35,7 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps }: 
   }));
   return <>
     <CacheProvider value={emotionCache}>
+    <UserProvider>
       <Head>
         <title>{Brand.Title.Common}</title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no' />
@@ -46,6 +48,7 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps }: 
           <Component {...pageProps} />
         </CssVarsProvider>
       </QueryClientProvider>
+    </UserProvider>
     </CacheProvider>
     <VercelAnalytics debug={false} />
   </>;

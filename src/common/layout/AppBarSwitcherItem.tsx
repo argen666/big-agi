@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 
-import { Box, Button, ButtonGroup, ListItem } from '@mui/joy';
+import {Box, Button, ButtonGroup, ListItem, Typography} from '@mui/joy';
+import { Link } from '~/common/components/Link';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 import { BringTheLove, DiscordIcon } from '~/common/layout/AppBarSupportItem';
 import { Brand } from '~/common/brand';
 
 import { setLayoutMenuAnchor } from './store-applayout';
+import ProfileClient from "../../apps/login/profile";
+import {Label} from "@mui/icons-material";
 
 
 // routes for the quick switcher menu item
@@ -15,7 +18,6 @@ import { setLayoutMenuAnchor } from './store-applayout';
 type ContainedAppType = 'chat' | /*'data' |*/ 'news' /*| 'share'*/;
 
 const AppItems: ContainedAppType[] = ['chat', 'news'];
-
 const AppRouteMap: { [key in ContainedAppType]: { name: string, route: string } } = {
   'chat': {
     name: 'Chat',
@@ -77,22 +79,37 @@ export function AppBarSwitcherItem() {
             {AppRouteMap[app].name}
           </Button>
         ))}
+
       </ButtonGroup>
 
       <Box sx={{ flex: 1 }} />
 
-      {/* Group 2: Social Links */}
-      {/*<ButtonGroup*/}
-      {/*  variant='solid'*/}
-      {/*  sx={{*/}
-      {/*    '--ButtonGroup-separatorSize': '0px',*/}
-      {/*    '--ButtonGroup-connected': '0',*/}
-      {/*    gap: 0,*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <BringTheLove text='Discord' icon={<DiscordIcon />} link={Brand.URIs.SupportInvite} />*/}
-      {/*  <BringTheLove text='GitHub' icon={<GitHubIcon />} link={Brand.URIs.OpenRepo} />*/}
-      {/*</ButtonGroup>*/}
+        {/*Group 2: USER */}
+        {/*<Typography>{user.name +'('+user.email+')'}</Typography>*/}
+
+
+       {/*Group 2: Social Links */}
+      <ButtonGroup
+        variant='solid'
+        sx={{
+          '--ButtonGroup-separatorSize': '0px',
+          '--ButtonGroup-connected': '0',
+          gap: 0,
+        }}
+      >
+        {/*<BringTheLove text='Discord' icon={<DiscordIcon />} link={Brand.URIs.SupportInvite} />*/}
+        {/*<BringTheLove text='GitHub' icon={<GitHubIcon />} link={Brand.URIs.OpenRepo} />*/}
+
+          {/*<Link noLinkStyle href='/api/auth/logout'> Logout </Link>*/}
+          <Button
+              key={'logout'}
+              size='sm' variant='soft' color='neutral'
+              component="a" href="/api/auth/logout">
+              Logout
+          </Button>
+
+          {/*{<button onClick={() => routerPush("/api/auth/logout")}>Logout {user}</button>}*/}
+      </ButtonGroup>
 
     </ListItem>
   );

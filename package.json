@@ -13,6 +13,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.3",
+    "@auth0/nextjs-auth0": "^3.3.0",
     "@dqbd/tiktoken": "^1.0.7",
     "@elastic/elasticsearch": "^8.9.0",
     "@emotion/cache": "^11.11.0",

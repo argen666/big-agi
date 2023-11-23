@@ -18,6 +18,7 @@ import { useUIStateStore } from '~/common/state/store-ui';
 // import { AppBarSupportItem } from './AppBarSupportItem';
 import { AppBarSwitcherItem } from './AppBarSwitcherItem';
 import { setLayoutDrawerAnchor, setLayoutMenuAnchor, useLayoutComponents } from './store-applayout';
+import ProfileClient from "../../apps/login/profile";
 
 
 function AppBarTitle() {
@@ -151,6 +152,7 @@ export function AppBar(props: { sx?: SxProps }) {
       open={!!menuAnchor} anchorEl={menuAnchor} onClose={closeMenuMenu}
       placement='bottom-end'
     >
+      <ProfileClient/>
       {commonMenuItems}
       {!!menuItems && <ListDivider sx={{ mt: 0 }} />}
       {!!menuItems && <Box sx={{ overflowY: 'auto' }}>{menuItems}</Box>}
