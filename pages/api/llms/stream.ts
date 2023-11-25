@@ -5,7 +5,9 @@ import { AnthropicWire } from '~/modules/llms/anthropic/anthropic.types';
 import { OpenAI } from '~/modules/llms/openai/openai.types';
 import { anthropicAccess, anthropicCompletionRequest } from '~/modules/llms/anthropic/anthropic.router';
 import { chatStreamSchema, openAIAccess, openAIChatCompletionPayload } from '~/modules/llms/openai/openai.router';
-
+import {createNextApiHandler} from "@trpc/server/adapters/next";
+import {appRouter} from "~/modules/trpc/trpc.router";
+import {createTRPCContext} from "~/modules/trpc/trpc.server";
 
 /**
  * Vendor stream parsers
@@ -141,7 +143,6 @@ export function createEmptyReadableStream<T = Uint8Array>(): ReadableStream<T> {
   });
 }
 
-
 export default async function handler(req: NextRequest): Promise<Response> {
 
   // inputs - reuse the tRPC schema
@@ -150,6 +151,7 @@ export default async function handler(req: NextRequest): Promise<Response> {
   // begin event streaming from the OpenAI API
   let upstreamResponse: Response;
   let vendorStreamParser: AIStreamParser;
+  let payload;
   try {
 
     // prepare the API request data
@@ -170,11 +172,12 @@ export default async function handler(req: NextRequest): Promise<Response> {
     }
 
     // POST to our API route
-    upstreamResponse = await fetch(headersUrl.url, {
+    payload = {
       method: 'POST',
       headers: headersUrl.headers,
       body: JSON.stringify(body),
-    });
+    }
+    upstreamResponse = await fetch(headersUrl.url, payload);
     await throwResponseNotOk(upstreamResponse);
 
   } catch (error: any) {
@@ -194,6 +197,12 @@ export default async function handler(req: NextRequest): Promise<Response> {
    */
   const chatResponseStream = (upstreamResponse.body || createEmptyReadableStream())
     .pipeThrough(createEventStreamTransformer(vendorStreamParser));
+
+  // console.log("LLM Messages: ")
+  // console.dir(payload.body, {depth: null})
+  // console.log("LLM response: ")
+  // //console.dir(chatResponseStream, {depth: null})
+  // console.dir(res, {depth: null})
 
   return new NextResponse(chatResponseStream, {
     status: 200,

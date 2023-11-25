@@ -9,6 +9,7 @@ import { ModelVendorAnthropic, SourceSetupAnthropic } from '~/modules/llms/anthr
 import { ModelVendorOpenAI, SourceSetupOpenAI } from './openai/openai.vendor';
 import { findVendorById } from './vendor.registry';
 import { useModelsStore } from './store-llms';
+import * as util from "util";
 
 
 export interface VChatMessageIn {
@@ -126,15 +127,15 @@ async function vendorStreamChat(vendor: ModelVendor, llm: DLLM, messages: VChatM
     throw new Error(`Error in openAI configuration for model ${llm.id}: ${llm.options}`);
 
   // call /api/llms/stream
-  const response = await fetch('/api/llms/stream', {
+  let payload = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       // map all to OpenAI, apart from Anthropic
       vendorId: vendor.id === 'anthropic' ? 'anthropic' : 'openai',
       access: vendor.id === 'anthropic'
-        ? ModelVendorAnthropic.normalizeSetup(sourceSetup as SourceSetupAnthropic)
-        : ModelVendorOpenAI.normalizeSetup(sourceSetup as SourceSetupOpenAI),
+          ? ModelVendorAnthropic.normalizeSetup(sourceSetup as SourceSetupAnthropic)
+          : ModelVendorOpenAI.normalizeSetup(sourceSetup as SourceSetupOpenAI),
       model: {
         id: llmRef,
         temperature: llmTemperature,
@@ -143,8 +144,9 @@ async function vendorStreamChat(vendor: ModelVendor, llm: DLLM, messages: VChatM
       functions: undefined,
       history: messages,
     } satisfies ChatStreamSchema),
-    signal: abortSignal,
-  });
+  signal: abortSignal,
+}
+  const response = await fetch('/api/llms/stream', payload);
 
   if (!response.ok || !response.body) {
     const errorMessage = response.body ? await response.text() : 'No response from server';
@@ -186,4 +188,27 @@ async function vendorStreamChat(vendor: ModelVendor, llm: DLLM, messages: VChatM
     if (incrementalText)
       editMessage({ text: incrementalText }, false);
   }
+  try {
+
+  const log = {
+    request_payload:payload,
+    request:messages,
+    response:incrementalText
+  }
+  const pl = {
+      method: 'POST',
+      body: JSON.stringify(log),
+    }
+  //const log_response = apiAsync.logging.pushLogs.query(JSON.stringify(log));
+  const log_response = await fetch('/api/log/log', pl);
+    if (!response.ok || !response.body) {
+      console.log('vendorStreamChat: error publish logs:', log_response);
+    }
+  } catch (e) {
+    console.log('vendorStreamChat: error publish logs:', e);
+  }
+  // console.log("LLM Messages: "+messages)
+  // console.log("LLM Messages: "+util.inspect(messages, {depth: null}))
+  // console.log("LLM response: "+incrementalText)
+  // console.log("LLM responseB: "+util.inspect(response.body, {depth: null}))
 }

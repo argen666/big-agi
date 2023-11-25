@@ -23,6 +23,7 @@ export const appRouter = createTRPCRouter({
   sharing: sharingRouter,
   ytpersona: ytPersonaRouter,
   elastic: elasticRouter,
+//  logging: loggingRouter,
 });
 
 // export type definition of API
