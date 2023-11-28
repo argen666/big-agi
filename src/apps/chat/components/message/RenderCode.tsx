@@ -70,7 +70,7 @@ function RenderCodeImpl(props: {
   const canCodepen = isSVG || (!!inferredCodeLanguage && languagesCodepen.includes(inferredCodeLanguage));
 
   const languagesReplit = ['python', 'java', 'csharp'];
-  const canReplit = !!inferredCodeLanguage && languagesReplit.includes(inferredCodeLanguage);
+  const canReplit = false;//!!inferredCodeLanguage && languagesReplit.includes(inferredCodeLanguage);
 
   const handleCopyToClipboard = (e: React.MouseEvent) => {
     e.stopPropagation();

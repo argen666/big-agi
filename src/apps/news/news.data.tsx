@@ -16,15 +16,15 @@ export const NewsItems: NewsItem[] = [
     versionName: '1.3.5',
     items: [
       // { text: <>(Labs mode) YouTube personas creator</> },
-      { text: <>Backup chats (export all)</> },
-      { text: <>Import ChatGPT shared chats</> },
-      { text: <>Cleaner, better, newer UI, including relative chats size</> },
-      // -- version separator --
-      { text: <>AI in the real world with <Typography color='success' sx={{ fontWeight: 600 }}>camera OCR</Typography> - MOBILE-ONLY</> },
-      { text: <><Typography color='success' sx={{ fontWeight: 600 }}>Anthropic</Typography> models full support</> },
+      { text: <>Limited data trial access</> },
+      // { text: <>Import ChatGPT shared chats</> },
+      // { text: <>Cleaner, better, newer UI, including relative chats size</> },
+      // // -- version separator --
+      // { text: <>AI in the real world with <Typography color='success' sx={{ fontWeight: 600 }}>camera OCR</Typography> - MOBILE-ONLY</> },
+      // { text: <><Typography color='success' sx={{ fontWeight: 600 }}>Anthropic</Typography> models full support</> },
     ],
   },
-  {
+  /*{
     versionName: '1.3.1',
     items: [
       { text: <><Typography color='success'>Flattener</Typography> - 4-mode conversations summarizer</> },
@@ -42,7 +42,7 @@ export const NewsItems: NewsItem[] = [
       { text: 'Support 𝑓unction models' }, // (n)
       { text: <Box sx={{ display: 'flex', alignItems: 'center' }}>Labs: experiments</Box> }, // ⚗️🧬🔬🥼 🥽🧪 <ScienceIcon sx={{ fontSize: 24, opacity: 0.5 }} />
     ],
-  },
+  },*/
 ];
 
 

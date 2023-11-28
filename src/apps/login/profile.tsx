@@ -7,6 +7,9 @@ export default function ProfileClient() {
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>{error.message}</div>;
 
+    const getUserObject = () => {
+        return user;
+    };
     //return user;
     return  (
         <Stack direction="row" spacing={1} alignSelf={"flex-end"} paddingRight={1} paddingTop={1}>

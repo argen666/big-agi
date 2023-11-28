@@ -74,13 +74,13 @@ export function ChatMenuItems(props: {
     {/*  </Typography>*/}
     {/*</ListItem>*/}
 
-    <MenuItem onClick={handleSystemMessagesToggle}>
-      <ListItemDecorator><SettingsSuggestIcon /></ListItemDecorator>
-      System message
-      <Switch checked={showSystemMessages} onChange={handleSystemMessagesToggle} sx={{ ml: 'auto' }} />
-    </MenuItem>
+    {/*<MenuItem onClick={handleSystemMessagesToggle}>*/}
+    {/*  <ListItemDecorator><SettingsSuggestIcon /></ListItemDecorator>*/}
+    {/*  System message*/}
+    {/*  <Switch checked={showSystemMessages} onChange={handleSystemMessagesToggle} sx={{ ml: 'auto' }} />*/}
+    {/*</MenuItem>*/}
 
-    <ListDivider inset='startContent' />
+    {/*<ListDivider inset='startContent' />*/}
 
     <MenuItem disabled={disabled || maxConversationsReached} onClick={handleConversationDuplicate}>
       <ListItemDecorator>
@@ -91,14 +91,14 @@ export function ChatMenuItems(props: {
       Duplicate{maxConversationsReached && ' (max reached)'}
     </MenuItem>
 
-    <MenuItem disabled={disabled} onClick={handleConversationFlatten}>
-      <ListItemDecorator>
-        {/*<Badge size='sm' color='success'>*/}
-        <CompressIcon color='success' />
-        {/*</Badge>*/}
-      </ListItemDecorator>
-      Flatten
-    </MenuItem>
+    {/*<MenuItem disabled={disabled} onClick={handleConversationFlatten}>*/}
+    {/*  <ListItemDecorator>*/}
+    {/*    /!*<Badge size='sm' color='success'>*!/*/}
+    {/*    <CompressIcon color='success' />*/}
+    {/*    /!*</Badge>*!/*/}
+    {/*  </ListItemDecorator>*/}
+    {/*  Flatten*/}
+    {/*</MenuItem>*/}
 
     <ListDivider inset='startContent' />
 

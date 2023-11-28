@@ -65,9 +65,10 @@ function CommonMenuItems(props: { onClose: () => void }) {
     {/*</MenuItem>*/}
 
     {/* Preferences |...| Dark Mode Toggle */}
-    <MenuItem onClick={handleShowSettings}>
+    {/*<MenuItem onClick={handleShowSettings}>*/}
+    <MenuItem>
       <ListItemDecorator><SettingsOutlinedIcon /></ListItemDecorator>
-      Preferences
+      Theme
       <IconButton
         variant='outlined' color='neutral'
         onClick={handleToggleDarkMode}

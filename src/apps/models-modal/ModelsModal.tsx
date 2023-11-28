@@ -14,6 +14,8 @@ import { LLMOptionsModal } from './LLMOptionsModal';
 import { ModelsList } from './ModelsList';
 import { ModelsSourceSelector } from './ModelsSourceSelector';
 import { VendorSourceSetup } from './VendorSourceSetup';
+import getUserObject from "../../apps/login/profile";
+import ProfileClient from "../../apps/login/profile";
 
 
 export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
@@ -56,6 +58,8 @@ export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
     {/* Sources Setup */}
     {modelsSetupOpen && <GoodModal
       title={<>Configure <b>AI Models</b></>}
+      sx={{ visibility: 'hidden' }}
+      autoclose={true}
       startButton={
         multiSource ? <Checkbox
           label='all vendors' sx={{ my: 'auto' }}

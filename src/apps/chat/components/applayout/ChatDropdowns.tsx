@@ -58,36 +58,35 @@ export function ChatDropdowns(props: {
       llmItems[llm.id] = { title: llm.label };
     }
   }
-
+//hide top menus
   return <>
-
     {/* Model selector */}
-    <AppBarDropdown
-      items={llmItems}
-      value={chatLLMId} onChange={handleChatModelChange}
-      placeholder='Models …'
-      appendOption={<>
+    {/*<AppBarDropdown*/}
+    {/*  items={llmItems}*/}
+    {/*  value={chatLLMId} onChange={handleChatModelChange}*/}
+    {/*  placeholder='Models …'*/}
+    {/*  appendOption={<>*/}
 
-        {chatLLMId && (
-          <ListItemButton key='menu-opt' onClick={handleOpenLLMOptions}>
-            <ListItemDecorator><SettingsIcon color='success' /></ListItemDecorator><Typography>Options</Typography>
-          </ListItemButton>
-        )}
+    {/*    {chatLLMId && (*/}
+    {/*      <ListItemButton key='menu-opt' onClick={handleOpenLLMOptions}>*/}
+    {/*        <ListItemDecorator><SettingsIcon color='success' /></ListItemDecorator><Typography>Options</Typography>*/}
+    {/*      </ListItemButton>*/}
+    {/*    )}*/}
 
-        <ListItemButton key='menu-llms' onClick={openModelsSetup}>
-          <ListItemDecorator><BuildCircleIcon color='success' /></ListItemDecorator><Typography>Models</Typography>
-        </ListItemButton>
+    {/*    <ListItemButton key='menu-llms' onClick={openModelsSetup}>*/}
+    {/*      <ListItemDecorator><BuildCircleIcon color='success' /></ListItemDecorator><Typography>Models</Typography>*/}
+    {/*    </ListItemButton>*/}
 
-      </>}
-    />
+    {/*  </>}*/}
+    {/*/>*/}
 
     {/* Persona selector */}
-    {systemPurposeId && (
-      <AppBarDropdown
-        items={SystemPurposes} showSymbols={zenMode !== 'cleaner'}
-        value={systemPurposeId} onChange={handleSystemPurposeChange}
-      />
-    )}
+    {/*{systemPurposeId && (*/}
+    {/*  <AppBarDropdown*/}
+    {/*    items={SystemPurposes} showSymbols={zenMode !== 'cleaner'}*/}
+    {/*    value={systemPurposeId} onChange={handleSystemPurposeChange}*/}
+    {/*  />*/}
+    {/*)}*/}
 
   </>;
 }

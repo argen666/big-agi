@@ -7,7 +7,20 @@ import { SxProps } from '@mui/joy/styles/types';
 /**
  * Base for our Modal components (Preferences, Models Setup, etc.)
  */
-export function GoodModal(props: { title: string | React.JSX.Element, strongerTitle?: boolean, open: boolean, onClose: () => void, startButton?: React.JSX.Element, sx?: SxProps, children: React.ReactNode }) {
+export function GoodModal(props: { autoclose: boolean, title: string | React.JSX.Element, strongerTitle?: boolean, open: boolean, onClose: () => void, startButton?: React.JSX.Element, sx?: SxProps, children: React.ReactNode }) {
+    //-------------- autoclose models modal
+   React.useEffect(() => {
+        if (props.open && props.autoclose) {
+            const timeoutId = setTimeout(() => {
+                props.onClose();
+            }, 3000); // 3 seconds
+
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+    }, [props.open, props.onClose]);
+    //---------------------
   return (
     <Modal open={props.open} onClose={props.onClose}>
       <ModalOverflow>
@@ -17,7 +30,8 @@ export function GoodModal(props: { title: string | React.JSX.Element, strongerTi
             maxWidth: 700,
             display: 'flex', flexDirection: 'column', gap: 3,
             ...props.sx,
-          }}>
+          }}
+        >
 
           <Box sx={{ mb: -1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography level={props.strongerTitle !== true ? 'title-md' : 'title-lg'}>

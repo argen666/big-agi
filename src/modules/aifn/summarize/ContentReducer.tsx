@@ -82,7 +82,7 @@ export function ContentReducer(props: {
 
         <ModalClose />
 
-        <Typography level='title-lg'>Content Reducer (preview)</Typography>
+        <Typography level='title-lg'>Token limit overflow</Typography>
 
         <Divider sx={{ my: 2 }} />
 
@@ -92,89 +92,91 @@ export function ContentReducer(props: {
           <Stack direction='column' sx={{ gap: 2 }}>
 
             <Typography level='body-sm'>
+              Your file is too big
+              <br/>
               Input: <b>{props.initialTokens.toLocaleString()}</b> tokens · Limit: <b>{props.tokenLimit.toLocaleString()}</b> tokens
               <br />
               compression needed ≥ <b>{props.tokenLimit ? Math.round(100 * props.initialTokens / props.tokenLimit) : 0}</b> %
             </Typography>
 
-            <FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormLabel>Reducer model</FormLabel>
-                <FormHelperText>{llms.find(llm => llm.id === reducerModelId)?.description?.slice(0, 10) ?? null}</FormHelperText>
-              </Box>
-              {reducerModelId && <Select value={reducerModelId} onChange={handleReducerModelChange} sx={{ minWidth: 140 }}>
-                {llms.map((llm: DLLM) => (
-                  <Option key={llm.id} value={llm.id}>
-                    {llm.label} {llm.id === fastLLMId && '*'}
-                  </Option>
-                ))}
-              </Select>}
-            </FormControl>
+            {/*<FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>*/}
+            {/*  <Box sx={{ minWidth: 120 }}>*/}
+            {/*    <FormLabel>Reducer model</FormLabel>*/}
+            {/*    <FormHelperText>{llms.find(llm => llm.id === reducerModelId)?.description?.slice(0, 10) ?? null}</FormHelperText>*/}
+            {/*  </Box>*/}
+            {/*  {reducerModelId && <Select value={reducerModelId} onChange={handleReducerModelChange} sx={{ minWidth: 140 }}>*/}
+            {/*    {llms.map((llm: DLLM) => (*/}
+            {/*      <Option key={llm.id} value={llm.id}>*/}
+            {/*        {llm.label} {llm.id === fastLLMId && '*'}*/}
+            {/*      </Option>*/}
+            {/*    ))}*/}
+            {/*  </Select>}*/}
+            {/*</FormControl>*/}
 
-            <FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormLabel>Compression</FormLabel>
-                <FormHelperText>{compressionLevel < 2 ? 'Low' : compressionLevel > 4 ? 'High' : 'Medium'}</FormHelperText>
-              </Box>
-              <Slider
-                color='neutral' disabled
-                min={1} max={5} defaultValue={3}
-                value={compressionLevel} onChange={handleCompressionLevelChange}
-                valueLabelDisplay='auto'
-                sx={{ py: 1, mt: 1.1 }}
-              />
-            </FormControl>
+            {/*<FormControl orientation='horizontal' sx={{ justifyContent: 'space-between' }}>*/}
+            {/*  <Box sx={{ minWidth: 120 }}>*/}
+            {/*    <FormLabel>Compression</FormLabel>*/}
+            {/*    <FormHelperText>{compressionLevel < 2 ? 'Low' : compressionLevel > 4 ? 'High' : 'Medium'}</FormHelperText>*/}
+            {/*  </Box>*/}
+            {/*  <Slider*/}
+            {/*    color='neutral' disabled*/}
+            {/*    min={1} max={5} defaultValue={3}*/}
+            {/*    value={compressionLevel} onChange={handleCompressionLevelChange}*/}
+            {/*    valueLabelDisplay='auto'*/}
+            {/*    sx={{ py: 1, mt: 1.1 }}*/}
+            {/*  />*/}
+            {/*</FormControl>*/}
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button variant='solid' color='primary' onClick={handlePreviewClicked} disabled={processing}>
-                Preview
-              </Button>
-            </Box>
+            {/*<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>*/}
+            {/*  <Button variant='solid' color='primary' onClick={handlePreviewClicked} disabled={processing}>*/}
+            {/*    Preview*/}
+            {/*  </Button>*/}
+            {/*</Box>*/}
 
           </Stack>
         </Section>
 
 
         {/* Outputs */}
-        <Section title='Compressed content'>
+        {/*<Section title='Compressed content'>*/}
 
-          {/* Readonly output and token counter */}
-          <Box sx={{ flexGrow: 1, position: 'relative', minWidth: '30vw' }}>
+        {/*  /!* Readonly output and token counter *!/*/}
+        {/*  <Box sx={{ flexGrow: 1, position: 'relative', minWidth: '30vw' }}>*/}
 
-            <Textarea
-              readOnly
-              variant='soft' autoFocus
-              minRows={4} maxRows={8}
-              value={reducedText}
-              sx={{
-                fontSize: '14px',
-                lineHeight: 1.75,
-              }} />
+        {/*    <Textarea*/}
+        {/*      readOnly*/}
+        {/*      variant='soft' autoFocus*/}
+        {/*      minRows={4} maxRows={8}*/}
+        {/*      value={reducedText}*/}
+        {/*      sx={{*/}
+        {/*        fontSize: '14px',*/}
+        {/*        lineHeight: 1.75,*/}
+        {/*      }} />*/}
 
-            <TokenBadge directTokens={reducedTokens} tokenLimit={props.tokenLimit} absoluteBottomRight />
+        {/*    <TokenBadge directTokens={reducedTokens} tokenLimit={props.tokenLimit} absoluteBottomRight />*/}
 
-            {/* indicator we're processing */}
-            {processing && (
-              <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <CircularProgress />
-                <Typography level='body-sm' sx={{ mt: 1 }}>Reduction in progress.</Typography>
-                <Typography level='body-xs'>This can take a few minutes</Typography>
-              </Box>
-            )}
+        {/*    /!* indicator we're processing *!/*/}
+        {/*    {processing && (*/}
+        {/*      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>*/}
+        {/*        <CircularProgress />*/}
+        {/*        <Typography level='body-sm' sx={{ mt: 1 }}>Reduction in progress.</Typography>*/}
+        {/*        <Typography level='body-xs'>This can take a few minutes</Typography>*/}
+        {/*      </Box>*/}
+        {/*    )}*/}
 
-          </Box>
+        {/*  </Box>*/}
 
-          {!!reducedTokens && <TokenUsageAlert usedTokens={reducedTokens} tokenLimit={props.tokenLimit} />}
+        {/*  {!!reducedTokens && <TokenUsageAlert usedTokens={reducedTokens} tokenLimit={props.tokenLimit} />}*/}
 
-        </Section>
+        {/*</Section>*/}
 
         <Box sx={{ mt: 4, display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
           <Button variant='soft' color='neutral' onClick={props.onClose}>
             Close
           </Button>
-          <Button variant='solid' color={remainingTokens >= 1 ? 'primary' : 'danger'} disabled={!reducedText} onClick={handleUseReducedTextClicked}>
-            Use Reduced Text
-          </Button>
+          {/*<Button variant='solid' color={remainingTokens >= 1 ? 'primary' : 'danger'} disabled={!reducedText} onClick={handleUseReducedTextClicked}>*/}
+          {/*  Use Reduced Text*/}
+          {/*</Button>*/}
         </Box>
 
       </ModalDialog>

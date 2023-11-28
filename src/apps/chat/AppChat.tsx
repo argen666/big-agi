@@ -32,7 +32,7 @@ const SPECIAL_ID_ALL_CHATS = 'all-chats';
 export type ChatModeId = 'immediate' | 'embeddings';
 export const ChatModeItems: { [key in ChatModeId]: { label: string; description: string | React.JSX.Element; experimental?: boolean } } = {
     'immediate': {
-        label: 'Chat',
+        label: 'Chat GPT-4',
         description: 'AI-powered responses',
     },
     /*'immediate-follow-up': {
@@ -197,7 +197,6 @@ export function AppChat() {
 
 
     // Pluggable ApplicationBar components
-
     const centerItems = React.useMemo(() =>
             <ChatDropdowns conversationId={activeConversationId}/>,
         [activeConversationId],
@@ -225,6 +224,7 @@ export function AppChat() {
     );
 
     useLayoutPluggable(centerItems, drawerItems, menuItems);
+    //useLayoutPluggable({}, drawerItems, menuItems);//hide top menu
 
     return <>
 

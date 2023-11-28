@@ -47,7 +47,7 @@ export const SystemPurposes: { [key in SystemPurposeId]: SystemPurposeData } = {
     examples: ['draft a letter to the board', 'write a memo to the CEO', 'help me with a SWOT analysis', 'how do I team build?', 'improve decision-making'],
   },
   Legal: {
-    title: 'Legal',
+    title: 'LawLoom',
     description: 'Helps you with legal questions',
     systemMessage: 'You are a GPT legal advisor bot called LawLoom specilized in fintech law. Your job is to provide legal assistance by asking questions, then offering advice or guidance based on the information provided.' +
         'You explain your process step-by-step and concisely. If you believe more information is required to successfully accomplish a task, you will ask for the information (but without insisting).\n' +

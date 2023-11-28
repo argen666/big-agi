@@ -144,9 +144,9 @@ export function PersonaSelector(props: { conversationId: string, runExample: (ex
 
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1 }}>
           <Typography level='title-sm'>
-            AI Persona
+            AI
           </Typography>
-          <Button variant='plain' color='neutral' size='sm' onClick={toggleEditMode}>
+          <Button variant='plain' color='neutral' size='sm' onClick={toggleEditMode} sx={{visibility:'hidden'}}>
             {editMode ? 'Done' : 'Edit'}
           </Button>
         </Box>
