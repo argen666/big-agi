@@ -82,14 +82,14 @@ export function ChatMenuItems(props: {
 
     {/*<ListDivider inset='startContent' />*/}
 
-    <MenuItem disabled={disabled || maxConversationsReached} onClick={handleConversationDuplicate}>
-      <ListItemDecorator>
-        {/*<Badge size='sm' color='success'>*/}
-        <ForkRightIcon color='success' />
-        {/*</Badge>*/}
-      </ListItemDecorator>
-      Duplicate{maxConversationsReached && ' (max reached)'}
-    </MenuItem>
+    {/*<MenuItem disabled={disabled || maxConversationsReached} onClick={handleConversationDuplicate}>*/}
+    {/*  <ListItemDecorator>*/}
+    {/*    /!*<Badge size='sm' color='success'>*!/*/}
+    {/*    <ForkRightIcon color='success' />*/}
+    {/*    /!*</Badge>*!/*/}
+    {/*  </ListItemDecorator>*/}
+    {/*  Duplicate{maxConversationsReached && ' (max reached)'}*/}
+    {/*</MenuItem>*/}
 
     {/*<MenuItem disabled={disabled} onClick={handleConversationFlatten}>*/}
     {/*  <ListItemDecorator>*/}

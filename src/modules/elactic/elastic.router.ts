@@ -46,6 +46,7 @@ export const elasticRouter = createTRPCRouter({
                 throw new Error(`Failed to send the req`);
 
         }),
+
 });
 
 async function callElastic(input) {
@@ -118,6 +119,15 @@ async function callElastic(input) {
             type: 'error',
             error: error?.toString() || 'Network issue',
         });
+        // const payload = {
+        //     type: 'success',
+        //     //url: `https://paste.gg/${paste.result.id}`,
+        //     //expires: paste.result.expires || 'never',
+        //     chainType: "",
+        //     result: "",
+        //     resultDocs: "",
+        // };
+        // return (payload);
     }
 }
 

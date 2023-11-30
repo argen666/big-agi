@@ -13,7 +13,6 @@ import {findLLMOrThrow, streamChat} from "~/modules/llms/llm.client";
 //import { loadQAChain } from "langchain/chains";
 //import {callElastic} from "~/modules/elastic/elastic.client";
 import {apiAsync} from '~/modules/trpc/trpc.client';
-import {Simulate} from "react-dom/test-utils";
 import {ModelVendorOpenAI, SourceSetupOpenAI} from "~/modules/llms/openai/openai.vendor";
 
 
@@ -97,17 +96,22 @@ async function getResultWithEmbeddings(question: string, model: string) {
     const llm = findLLMOrThrow(model);
     const openAISetup = ModelVendorOpenAI.normalizeSetup(llm._source.setup as Partial<SourceSetupOpenAI>);
     // console.log(openAISetup)
-    const docsString = apiAsync.elastic.searchDocs.query({
-        question: question,
-        dbHost: dbHost,
-        indexdb: indexdb,
-        docsCount: docsCount.toString(),
-        chainType: chainType,
-        openAIKey: openAISetup.oaiKey,
-        embeddingsModel: embeddingsModel
-    });
-    console.log(docsString)
-    return docsString
+    try {
+        const docsString = apiAsync.elastic.searchDocs.query({
+            question: question,
+            dbHost: dbHost,
+            indexdb: indexdb,
+            docsCount: docsCount.toString(),
+            chainType: chainType,
+            openAIKey: openAISetup.oaiKey,
+            embeddingsModel: embeddingsModel
+        });
+        console.log(docsString)
+        return docsString
+    } catch (e) {
+        console.log("Error while getting embeddings: " + e)
+        return ""
+    }
 }
 
 export function updatePurposeInHistory(conversationId: string, history: DMessage[], systemMessageNew: string | null, purposeId: SystemPurposeId): DMessage[] {
