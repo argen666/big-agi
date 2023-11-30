@@ -97,7 +97,7 @@ async function getResultWithEmbeddings(question: string, model: string) {
     const openAISetup = ModelVendorOpenAI.normalizeSetup(llm._source.setup as Partial<SourceSetupOpenAI>);
     // console.log(openAISetup)
     try {
-        const docsString = apiAsync.elastic.searchDocs.query({
+        const docsString = await apiAsync.elastic.searchDocs.query({
             question: question,
             dbHost: dbHost,
             indexdb: indexdb,
