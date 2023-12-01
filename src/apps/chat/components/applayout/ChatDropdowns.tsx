@@ -58,12 +58,20 @@ export function ChatDropdowns(props: {
       llmItems[llm.id] = { title: llm.label };
     }
   }
+  //fixme DEFAULT MODEL
+  const defaultModelPrefix = 'cashq';
+  const defaultModel = llms.find(model=>model.label.toLowerCase().startsWith(defaultModelPrefix));
+  if (defaultModel)
+    handleChatModelChange(null,defaultModel.id);
+  //console.log("DefaultModel:"+JSON.stringify(defaultModel))
 //hide top menus
   return <>
     {/* Model selector */}
     {/*<AppBarDropdown*/}
     {/*  items={llmItems}*/}
-    {/*  value={chatLLMId} onChange={handleChatModelChange}*/}
+    {/*  //value={chatLLMId}*/}
+    {/*  value={defaultModel ? defaultModel.id : chatLLMId}*/}
+    {/*  onChange={handleChatModelChange}*/}
     {/*  placeholder='Models …'*/}
     {/*  appendOption={<>*/}
 
@@ -80,7 +88,7 @@ export function ChatDropdowns(props: {
     {/*  </>}*/}
     {/*/>*/}
 
-    {/* Persona selector */}
+     {/*Persona selector*/}
     {/*{systemPurposeId && (*/}
     {/*  <AppBarDropdown*/}
     {/*    items={SystemPurposes} showSymbols={zenMode !== 'cleaner'}*/}

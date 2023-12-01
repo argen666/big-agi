@@ -34,7 +34,7 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
   const keyError = (/*needsUserKey ||*/ !!oaiKey) && !keyValid;
   const shallFetchSucceed = oaiKey ? keyValid : !needsUserKey;
 
-  // fetch models
+  //fetch models
   const { isFetching, refetch, isError, error } = apiQuery.llmOpenAI.listModels.useQuery({
     access: { oaiKey, oaiHost, oaiOrg, heliKey, moderationCheck },
     filterGpt: true,
@@ -51,15 +51,15 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
   return <Box sx={{ display: 'flex', flexDirection: 'column', gap: settingsGap }}>
 
     <FormInputKey
-      label={'API Key'}
-      rightLabel={<>{needsUserKey
-        ? !oaiKey && <><Link level='body-sm' href='https://platform.openai.com/account/api-keys' target='_blank'>create Key</Link> and <Link level='body-sm' href='https://openai.com/waitlist/gpt-4-api' target='_blank'>apply to GPT-4</Link></>
-        : '✔️ already set in server'
-      } {oaiKey && keyValid && <Link level='body-sm' href='https://platform.openai.com/account/usage' target='_blank'>check usage</Link>}
-      </>}
-      value={oaiKey} onChange={value => updateSetup({ oaiKey: value })}
-      required={needsUserKey} isError={keyError}
-      placeholder='sk-...'
+        label={'API Key'}
+        rightLabel={<>{needsUserKey
+            ? !oaiKey && <><Link level='body-sm' href='https://platform.openai.com/account/api-keys' target='_blank'>create Key</Link> and <Link level='body-sm' href='https://openai.com/waitlist/gpt-4-api' target='_blank'>apply to GPT-4</Link></>
+            : '✔️ already set in server'
+        } {oaiKey && keyValid && <Link level='body-sm' href='https://platform.openai.com/account/usage' target='_blank'>check usage</Link>}
+        </>}
+        value={oaiKey} onChange={value => updateSetup({ oaiKey: value })}
+        required={needsUserKey} isError={keyError}
+        placeholder='sk-...'
     />
 
     {showAdvanced && <FormControl orientation='horizontal' sx={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -72,9 +72,9 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
         </FormHelperText>
       </Box>
       <Input
-        variant='outlined' placeholder='Optional, for enterprise users'
-        value={oaiOrg} onChange={event => updateSetup({ oaiOrg: event.target.value })}
-        sx={{ flexGrow: 1 }}
+          variant='outlined' placeholder='Optional, for enterprise users'
+          value={oaiOrg} onChange={event => updateSetup({ oaiOrg: event.target.value })}
+          sx={{ flexGrow: 1 }}
       />
     </FormControl>}
 
@@ -88,9 +88,9 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
         </FormHelperText>
       </Box>
       <Input
-        variant='outlined' placeholder='e.g., oai.hconeai.com'
-        value={oaiHost} onChange={event => updateSetup({ oaiHost: event.target.value })}
-        sx={{ flexGrow: 1 }}
+          variant='outlined' placeholder='e.g., oai.hconeai.com'
+          value={oaiHost} onChange={event => updateSetup({ oaiHost: event.target.value })}
+          sx={{ flexGrow: 1 }}
       />
     </FormControl>}
 
@@ -104,9 +104,9 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
         </FormHelperText>
       </Box>
       <Input
-        variant='outlined' placeholder='sk-...'
-        value={heliKey} onChange={event => updateSetup({ heliKey: event.target.value })}
-        sx={{ flexGrow: 1 }}
+          variant='outlined' placeholder='sk-...'
+          value={heliKey} onChange={event => updateSetup({ heliKey: event.target.value })}
+          sx={{ flexGrow: 1 }}
       />
     </FormControl>}
 
@@ -121,10 +121,10 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
         </FormHelperText>
       </Box>
       <Switch
-        checked={moderationCheck}
-        onChange={event => updateSetup({ moderationCheck: event.target.checked })}
-        endDecorator={moderationCheck ? 'Enabled' : 'Off'}
-        sx={{ flexGrow: 1 }}
+          checked={moderationCheck}
+          onChange={event => updateSetup({ moderationCheck: event.target.checked })}
+          endDecorator={moderationCheck ? 'Enabled' : 'Off'}
+          sx={{ flexGrow: 1 }}
       />
     </FormControl>}
 
@@ -136,11 +136,11 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
       </FormLabel>
 
       <Button
-        variant='solid' color={isError ? 'warning' : 'primary'}
-        disabled={!shallFetchSucceed || isFetching}
-        endDecorator={<SyncIcon />}
-        onClick={() => refetch()}
-        sx={{ minWidth: 120, ml: 'auto' }}
+          variant='solid' color={isError ? 'warning' : 'primary'}
+          disabled={!shallFetchSucceed || isFetching}
+          endDecorator={<SyncIcon />}
+          onClick={() => refetch()}
+          sx={{ minWidth: 120, ml: 'auto' }}
       >
         Models
       </Button>
@@ -189,12 +189,18 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
 
 const knownBases = [
   {
-    id: 'gpt-4-0613',
+    id: 'gpt-4-1106-preview',
     label: 'CashQ-4',
-    context: 8192,
+    context: 128000,
     description: 'LawLoom model',
   },
-    {
+  {
+    id: 'gpt-4-0613',
+    label: 'GPT-4 0613 (Original)',
+    context: 8192,
+    description: 'Insightful, big thinker, slower, pricey',
+  },
+  {
     id: 'gpt-4',
     label: 'GPT-4 (Original)',
     context: 8192,
@@ -221,6 +227,8 @@ const knownBases = [
 ];
 
 function openAIModelToDLLM(model: OpenAI.Wire.Models.ModelDescription, source: DModelSource): DLLM<LLMOptionsOpenAI> {
+  const maxOutputTokens = model.maxCompletionTokens || Math.round((model.contextWindow || 4096) / 2);
+  const llmResponseTokens = Math.round(maxOutputTokens / (model.maxCompletionTokens ? 2 : 4));
   const base = knownBases.find(base => model.id.startsWith(base.id)) || knownBases[knownBases.length - 1];
   const suffix = model.id.slice(base.id.length).trim();
   //const hidden = !suffix || suffix.startsWith('-03');
@@ -232,13 +240,15 @@ function openAIModelToDLLM(model: OpenAI.Wire.Models.ModelDescription, source: D
     description: base.description,
     tags: [], // ['stream', 'chat'],
     contextTokens: base.context,
+    maxOutputTokens: maxOutputTokens,
     hidden,
     sId: source.id,
     _source: source,
     options: {
       llmRef: model.id,
       llmTemperature: 0.5,
-      llmResponseTokens: Math.round(base.context / 8),
+      // llmResponseTokens: Math.round(base.context / 8),
+      llmResponseTokens: llmResponseTokens,
     },
   };
 }

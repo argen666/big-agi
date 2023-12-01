@@ -25,7 +25,8 @@ export function parseBlocks(forceText: boolean, text: string): Block[] {
   while ((match = codeBlockRegex.exec(text)) !== null) {
     blocks.push({ type: 'text', content: text.slice(lastIndex, match.index) });
     const blockTitle: string = (match[1] || '').trim();
-    const blockCode: string = match[2].trim();
+    //const blockCode: string = match[2].trim();
+    const blockCode: string = "";
     const blockEnd: string = match[3];
     blocks.push({ type: 'code', blockTitle, blockCode, complete: blockEnd.startsWith('```') });
     lastIndex = match.index + match[0].length;

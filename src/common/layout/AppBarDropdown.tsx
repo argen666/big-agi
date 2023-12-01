@@ -25,6 +25,7 @@ export function AppBarDropdown<TValue extends string>(props: {
   showSymbols?: boolean,
   sx?: SxProps
 }) {
+  //console.log(JSON.stringify(props.items));
   return <Select
     variant='solid' color='neutral'
     value={props.value} onChange={props.onChange}
@@ -67,7 +68,7 @@ export function AppBarDropdown<TValue extends string>(props: {
       {Object.keys(props.items).map((key: string, idx: number) => <React.Fragment key={'key-' + idx}>
         {props.items[key].type === 'separator'
           ? <ListDivider />
-          : <Option variant='plain' value={key} sx={{ whiteSpace: 'nowrap' }}>
+          : <Option variant='plain' value={key} sx={{ whiteSpace: 'nowrap' }} selected={props.items[key].title.toLowerCase().startsWith('cashq')}>
             {props.showSymbols && <ListItemDecorator>{props.items[key]?.symbol + ' '}</ListItemDecorator>}
             {props.items[key].title}
             {/*{key === props.value && (*/}
