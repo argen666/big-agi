@@ -7,7 +7,7 @@ import {incrementalVersion} from './news.data';
 import {useUser} from "@auth0/nextjs-auth0/client";
 
 const adminList = ["alex@mycashq.com", "igor@mycashq.com"]
-const invitations = [""]
+const invitations = ["Robin.Garrison@firstbankonline.com","lorenzo@corisma.net","evan@kiddiekredit.com"]
 const invitationList = [...adminList, ...invitations]
 
 export function checkInvitationList() {
