@@ -16,7 +16,7 @@ export function parseBlocks(forceText: boolean, text: string): Block[] {
   if (text.startsWith('<!DOCTYPE html') || text.startsWith('<head>\n'))
     return [{ type: 'html', html: text }];
 
-  const codeBlockRegex = /`{3,}([\w\\.+-_\s]+)?\n([\s\S]*?)(`{3,}|$)/g;
+  const codeBlockRegex = /`{3,}([\w\\.+-_]+)?\n([\s\S]*?)(`{3,}|$)/g;
   const blocks: Block[] = [];
 
   let lastIndex = 0;
