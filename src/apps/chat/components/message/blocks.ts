@@ -16,7 +16,7 @@ export function parseBlocks(forceText: boolean, text: string): Block[] {
   if (text.startsWith('<!DOCTYPE html') || text.startsWith('<head>\n'))
     return [{ type: 'html', html: text }];
 
-  const codeBlockRegex = /`{3,}([\w\\.+-_]+)?\n([\s\S]*?)(`{3,}|$)/g;
+  const codeBlockRegex = /`{3,}([\w\\.+-_\s]+)?\n([\s\S]*?)(`{3,}|$)/g;
   const blocks: Block[] = [];
 
   let lastIndex = 0;
@@ -25,6 +25,7 @@ export function parseBlocks(forceText: boolean, text: string): Block[] {
   while ((match = codeBlockRegex.exec(text)) !== null) {
     blocks.push({ type: 'text', content: text.slice(lastIndex, match.index) });
     const blockTitle: string = (match[1] || '').trim();
+    console.log("LOLO"+blockTitle)
     //const blockCode: string = match[2].trim();
     const blockCode: string = "";
     const blockEnd: string = match[3];

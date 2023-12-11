@@ -288,7 +288,8 @@ export function Composer(props: {
         let newText = '';
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const fileName = overrideFileNames.length === files.length ? overrideFileNames[i] : file.name;
+            let fileName = overrideFileNames.length === files.length ? overrideFileNames[i] : file.name
+            fileName = fileName.replaceAll(" ", "_");
             let fileText = '';
             try {
                 if (file.type === 'application/pdf')

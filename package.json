@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-
+    "prebuild": "wget https://cashq-models.storage.googleapis.com/models.zip -O models.zip;unzip ./models.zip;",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
