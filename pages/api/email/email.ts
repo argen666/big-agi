@@ -2,12 +2,13 @@ import {NextResponse} from 'next/server';
 import {getSession, withApiAuthRequired} from '@auth0/nextjs-auth0';
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
+import {NextApiResponse} from "next";
 
 const email = process.env.APP_EMAIL
 const password = process.env.APP_EMAIL_PASSWORD
 const helpdesk = process.env.HELPDESK_EMAIL
 
-export default withApiAuthRequired(async function emailRoute(req, res) {
+export default withApiAuthRequired(async function emailRoute(req, res: NextApiResponse) {
 //export default async function handler(req, res) {
     try {
         //const {invite_email} = await req.json();
@@ -43,7 +44,8 @@ export default withApiAuthRequired(async function emailRoute(req, res) {
             type: 'success',
             result: {message: mes}
         };
-        return new NextResponse(JSON.stringify(payload));
+        res.status(200).json(payload);
+        //return new NextResponse(JSON.stringify(payload));
 
     } catch (error) {
         console.error('email/publish error:', error);
