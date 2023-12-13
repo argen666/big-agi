@@ -36,6 +36,7 @@
     "eventsource-parser": "^1.0.0",
     "langchain": "^0.0.148",
     "next": "^13.4.19",
+    "nodemailer": "^6.9.7",
     "pdfjs-dist": "3.9.179",
     "plantuml-encoder": "^1.4.0",
     "prismjs": "^1.29.0",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.5.3",
+    "@types/nodemailer": "^6.4.14",
     "@types/plantuml-encoder": "^1.4.0",
     "@types/prismjs": "^1.26.0",
     "@types/react": "^18.2.21",

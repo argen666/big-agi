@@ -318,6 +318,9 @@ export function Composer(props: {
 
         // within the budget, so just append
         setComposeText(text => expandPromptTemplate(PromptTemplates.Concatenate, {text: newText})(text));
+        const text = (composeText || '').trim();
+        newText = expandPromptTemplate(PromptTemplates.Concatenate, {text: newText})(text)
+        //console.log("newText:"+newText)
         //auto click send
         if (newText.length && props.conversationId) {
             setComposeText('');
