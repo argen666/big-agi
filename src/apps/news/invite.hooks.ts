@@ -1,14 +1,15 @@
 import * as React from 'react';
 import {useRouter} from 'next/router';
+import {isInvited} from "../../users";
 
 import {useAppStateStore} from '~/common/state/store-appstate';
 
 import {incrementalVersion} from './news.data';
 import {useUser} from "@auth0/nextjs-auth0/client";
 
-const adminList = ["alex@mycashq.com", "igor@mycashq.com"]
-const invitations = ["Robin.Garrison@firstbankonline.com","lorenzo@corisma.net","evan@kiddiekredit.com"]
-const invitationList = [...adminList, ...invitations]
+// const adminList = ["alex@mycashq.com", "igor@mycashq.com"]
+// const invitations = ["Robin.Garrison@firstbankonline.com", "lorenzo@corisma.net", "evan@kiddiekredit.com", "krbahr@gmail.com", "santosbarrio@letsbit.io"]
+// const invitationList = [...adminList, ...invitations]
 
 export function checkInvitationList() {
     const {push} = useRouter();
@@ -16,7 +17,7 @@ export function checkInvitationList() {
     if (isLoading) return false;
     if (error) return false;
     //console.log("User:"+JSON.stringify(user))
-    const isUserInvited = invitationList.includes(user.email);
+    const isUserInvited = isInvited(user.email);
     if (!isUserInvited) {
         React.useEffect(() => {
             // Disable for now
@@ -28,7 +29,7 @@ export function checkInvitationList() {
         }, [push, user]);
     } else {
         React.useEffect(() => {
-        localStorage.removeItem('app-models');
+            localStorage.removeItem('app-models');
         }, []);
         return true
     }

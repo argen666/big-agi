@@ -13,11 +13,15 @@ import { AppBarDropdown, DropdownItems } from '~/common/layout/AppBarDropdown';
 import { useChatStore } from '~/common/state/store-chats';
 import { useUIPreferencesStore, useUIStateStore } from '~/common/state/store-ui';
 
+import {useUser} from "@auth0/nextjs-auth0/client";
+import {isAdmin} from "../../../../users";
 
 export function ChatDropdowns(props: {
   conversationId: string | null
 }) {
-
+  const { user, error, isLoading } = useUser();
+  const userIsAdmin = isAdmin(user?.email);
+  console.log("LOL666:"+ user?.email+ ",  "+userIsAdmin)
   // external state
   const { chatLLMId, setChatLLMId, llms } = useModelsStore(state => ({
     chatLLMId: state.chatLLMId,
@@ -61,32 +65,32 @@ export function ChatDropdowns(props: {
   //fixme DEFAULT MODEL
   const defaultModelPrefix = 'cashq';
   const defaultModel = llms.find(model=>model.label.toLowerCase().startsWith(defaultModelPrefix));
-  if (defaultModel)
+  if (defaultModel && !userIsAdmin)
     handleChatModelChange(null,defaultModel.id);
   //console.log("DefaultModel:"+JSON.stringify(defaultModel))
 //hide top menus
   return <>
-    {/* Model selector */}
-    {/*<AppBarDropdown*/}
-    {/*  items={llmItems}*/}
-    {/*  //value={chatLLMId}*/}
-    {/*  value={defaultModel ? defaultModel.id : chatLLMId}*/}
-    {/*  onChange={handleChatModelChange}*/}
-    {/*  placeholder='Models …'*/}
-    {/*  appendOption={<>*/}
+     {/*Model selector */}
+    {userIsAdmin &&(<AppBarDropdown
+      items={llmItems}
+      //value={chatLLMId}
+      value={defaultModel && !userIsAdmin ? defaultModel.id : chatLLMId}
+      onChange={handleChatModelChange}
+      placeholder='Models …'
+      appendOption={<>
 
-    {/*    {chatLLMId && (*/}
-    {/*      <ListItemButton key='menu-opt' onClick={handleOpenLLMOptions}>*/}
-    {/*        <ListItemDecorator><SettingsIcon color='success' /></ListItemDecorator><Typography>Options</Typography>*/}
-    {/*      </ListItemButton>*/}
-    {/*    )}*/}
+        {chatLLMId && (
+          <ListItemButton key='menu-opt' onClick={handleOpenLLMOptions}>
+            <ListItemDecorator><SettingsIcon color='success' /></ListItemDecorator><Typography>Options</Typography>
+          </ListItemButton>
+        )}
 
-    {/*    <ListItemButton key='menu-llms' onClick={openModelsSetup}>*/}
-    {/*      <ListItemDecorator><BuildCircleIcon color='success' /></ListItemDecorator><Typography>Models</Typography>*/}
-    {/*    </ListItemButton>*/}
+        <ListItemButton key='menu-llms' onClick={openModelsSetup}>
+          <ListItemDecorator><BuildCircleIcon color='success' /></ListItemDecorator><Typography>Models</Typography>
+        </ListItemButton>
 
-    {/*  </>}*/}
-    {/*/>*/}
+      </>}
+    />)}
 
      {/*Persona selector*/}
     {/*{systemPurposeId && (*/}

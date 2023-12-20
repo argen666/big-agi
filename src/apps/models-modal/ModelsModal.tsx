@@ -58,8 +58,8 @@ export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
     {/* Sources Setup */}
     {modelsSetupOpen && <GoodModal
       title={<>Configure <b>AI Models</b></>}
-      sx={{ visibility: 'hidden' }}
-      autoclose={true}
+      //sx={{ visibility: 'hidden' }}
+      //autoclose={true}
       startButton={
         multiSource ? <Checkbox
           label='all vendors' sx={{ my: 'auto' }}
