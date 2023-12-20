@@ -21,7 +21,6 @@ export function ChatDropdowns(props: {
 }) {
   const { user, error, isLoading } = useUser();
   const userIsAdmin = isAdmin(user?.email);
-  console.log("LOL666:"+ user?.email+ ",  "+userIsAdmin)
   // external state
   const { chatLLMId, setChatLLMId, llms } = useModelsStore(state => ({
     chatLLMId: state.chatLLMId,

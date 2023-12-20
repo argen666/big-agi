@@ -16,6 +16,8 @@ import { ModelsSourceSelector } from './ModelsSourceSelector';
 import { VendorSourceSetup } from './VendorSourceSetup';
 import getUserObject from "../../apps/login/profile";
 import ProfileClient from "../../apps/login/profile";
+import {useUser} from "@auth0/nextjs-auth0/client";
+import {isAdmin} from "../../users";
 
 
 export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
@@ -39,6 +41,9 @@ export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
 
   const multiSource = modelSources.length > 1;
 
+  const { user, error, isLoading } = useUser();
+  const userIsAdmin = isAdmin(user?.email);
+
   // if no sources at startup, open the modal
   React.useEffect(() => {
     if (!selectedSourceId && !props.suspendAutoModelsSetup)
@@ -59,7 +64,8 @@ export function ModelsModal(props: { suspendAutoModelsSetup?: boolean }) {
     {modelsSetupOpen && <GoodModal
       title={<>Configure <b>AI Models</b></>}
       //sx={{ visibility: 'hidden' }}
-      //autoclose={true}
+      {...(userIsAdmin ? {} : { sx: { visibility: 'hidden' } })}
+      autoclose={!userIsAdmin}
       startButton={
         multiSource ? <Checkbox
           label='all vendors' sx={{ my: 'auto' }}
