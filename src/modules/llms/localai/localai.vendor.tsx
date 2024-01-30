@@ -24,7 +24,8 @@ export const ModelVendorLocalAI: ModelVendor<SourceSetupLocalAI, LLMOptionsOpenA
 
   // functions
   initalizeSetup: () => ({
-    oaiHost: 'http://localhost:8080',
+    //oaiHost: 'http://localhost:8080',
+    oaiHost: 'http://0.0.0.0:8080',
   }),
   normalizeSetup: (partialSetup?: Partial<SourceSetupLocalAI>) => ({
     oaiHost: '',
