@@ -658,7 +658,7 @@ export function Composer(props: {
                                     </Button>
                                 ) : (
                                     <ButtonGroup variant={isWriteUser ? 'solid' : 'solid'}
-                                                 color={isReAct ? 'success' : isFollowUp ? 'warning' : 'primary'}
+                                                 color={isReAct ? 'success' : isFollowUp ? 'warning' : isEmbeddings ? 'success' : 'primary' }
                                                  sx={{flexGrow: 1}}>
                                         {chatButton}
                                         <IconButton disabled={!props.conversationId || !chatLLM || !!chatModeMenuAnchor}

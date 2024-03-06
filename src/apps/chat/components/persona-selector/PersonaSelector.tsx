@@ -144,14 +144,14 @@ export function PersonaSelector(props: { conversationId: string, runExample: (ex
 
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1 }}>
           <Typography level='title-sm'>
-            AI
+
           </Typography>
           <Button variant='plain' color='neutral' size='sm' onClick={toggleEditMode} sx={{visibility:'hidden'}}>
             {editMode ? 'Done' : 'Edit'}
           </Button>
         </Box>
 
-        <Grid container spacing={tileSpacing} sx={{ justifyContent: 'flex-start' }}>
+        <Grid container spacing={tileSpacing} sx={{ justifyContent: 'center' }}>
           {purposeIDs.map((spId) => (
             <Grid key={spId}>
               <Button
@@ -213,29 +213,56 @@ export function PersonaSelector(props: { conversationId: string, runExample: (ex
           </Grid>}
         </Grid>
 
+        {/*<Typography*/}
+        {/*  level='body-sm'*/}
+        {/*  sx={{*/}
+        {/*    mt: selectedExample ? 1 : 3,*/}
+        {/*    display: 'flex', alignItems: 'center', gap: 1,*/}
+        {/*    // justifyContent: 'center',*/}
+        {/*    '&:hover > button': { opacity: 1 },*/}
+        {/*  }}>*/}
+        {/*  {!selectedPurpose*/}
+        {/*    ? 'Oops! No AI persona found for your search.'*/}
+        {/*    : (selectedExample*/}
+        {/*        ? <>*/}
+        {/*          Example: {selectedExample}*/}
+        {/*          <IconButton*/}
+        {/*            variant='plain' color='primary' size='md'*/}
+        {/*            onClick={() => props.runExample(selectedExample)}*/}
+        {/*            sx={{ opacity: 0, transition: 'opacity 0.3s' }}*/}
+        {/*          >*/}
+        {/*            <TelegramIcon />*/}
+        {/*          </IconButton>*/}
+        {/*        </>*/}
+        {/*        : selectedPurpose.description*/}
+        {/*    )}*/}
+        {/*</Typography>*/}
+
         <Typography
-          level='body-sm'
-          sx={{
-            mt: selectedExample ? 1 : 3,
-            display: 'flex', alignItems: 'center', gap: 1,
-            // justifyContent: 'center',
-            '&:hover > button': { opacity: 1 },
-          }}>
+            level='body-sm'
+            sx={{
+              mt: selectedPurpose?.examples?.length > 0 ? 1 : 3,
+              display: 'flex', alignItems: 'center', gap: 1,
+              flexDirection: 'column', // Add this if you want each example in a new line
+              '&:hover > button': { opacity: 1 },
+            }}>
           {!selectedPurpose
-            ? 'Oops! No AI persona found for your search.'
-            : (selectedExample
-                ? <>
-                  Example: {selectedExample}
-                  <IconButton
-                    variant='plain' color='primary' size='md'
-                    onClick={() => props.runExample(selectedExample)}
-                    sx={{ opacity: 0, transition: 'opacity 0.3s' }}
-                  >
-                    <TelegramIcon />
-                  </IconButton>
-                </>
-                : selectedPurpose.description
-            )}
+              ? 'Oops! No AI persona found for your search.'
+              : selectedPurpose.examples && selectedPurpose.examples.length > 0
+                  ? selectedPurpose.examples.map((example, index) => (
+                      <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        Example: {example}
+                        <IconButton
+                            variant='plain' color='primary' size='md'
+                            onClick={() => props.runExample(example)}
+                            sx={{ opacity: 100, transition: 'opacity 0.3s' }}
+                        >
+                          <TelegramIcon />
+                        </IconButton>
+                      </div>
+                  ))
+                  : selectedPurpose.description
+          }
         </Typography>
 
         {systemPurposeId === 'Custom' && (
