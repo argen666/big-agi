@@ -4,6 +4,7 @@ export const AdminList: Email[] = ["alex@mycashq.com", "igor@mycashq.com",];
 export const InvitationsList: Email[] = [
     "igor@b-platform.io",
     "alex@b-platform.io",
+    "arina@mycashq.com",
     "Robin.Garrison@firstbankonline.com",
     "lorenzo@corisma.net",
     "evan@kiddiekredit.com",
