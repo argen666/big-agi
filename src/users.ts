@@ -17,6 +17,8 @@ export const InvitationsList: Email[] = [
     "sytaylor0@gmail.com",
     "nader@moneyhash.io",
     "natalia@nklawgroup.com",
+    "od@zuger-see.com",
+    "micaelac.romero@gmail.com"
 ];
 
 export function isAdmin(userEmail) {
