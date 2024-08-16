@@ -189,7 +189,7 @@ export function OpenAISourceSetup(props: { sourceId: DModelSourceId }) {
 
 const knownBases = [
   {
-    id: 'gpt-4-1106-preview',
+    id: 'gpt-4o',
     label: 'CashQ-4',
     context: 128000,
     description: 'LawLoom model',
